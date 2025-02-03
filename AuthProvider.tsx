@@ -1,23 +1,66 @@
-import React, { createContext, useContext, useState } from "react";
+// AuthProvider.tsx
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { User, onAuthStateChanged, signInWithEmailAndPassword, signOut, createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { auth, db } from "./firebaseConfig";
 
-type UserType = "user" | "admin" | null;
+export type UserType = "user" | "admin" | null;
 
 interface AuthContextType {
-  user: UserType;
-  login: (userType: UserType) => void;
-  logout: () => void;
+  user: User | null;
+  role: UserType | string;
+  login: (email: string, password: string) => Promise<void>;
+  signup: (email: string, password: string, role: UserType) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<UserType>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [role, setRole] = useState<UserType>(null);
 
-  const login = (userType: UserType) => setUser(userType);
-  const logout = () => setUser(null);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+
+      if (currentUser) {
+        const roleDoc = await getDoc(doc(db, "users", currentUser.uid));
+        if (roleDoc.exists()) {
+          setRole(roleDoc.data().role);
+        }
+      } else {
+        setRole(null);
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
+  const login = async (email: string, password: string) => {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const roleDoc = await getDoc(doc(db, "users", userCredential.user.uid));
+
+    if (roleDoc.exists()) {
+      setRole(roleDoc.data().role);
+    }
+  };
+
+  const signup = async (email: string, password: string, role: UserType) => {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    
+    // Store user role in Firestore
+    await setDoc(doc(db, "users", userCredential.user.uid), { role });
+    setRole(role);
+  };
+
+  const logout = async () => {
+    await signOut(auth);
+    setRole(null);
+  };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, role, login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );
