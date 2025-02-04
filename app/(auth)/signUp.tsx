@@ -5,52 +5,41 @@ import { useAuth } from "../../AuthProvider";
 import { useRouter } from "expo-router";
 import { UserType } from "../../AuthProvider";
 
-// type UserType = 'user' | 'admin';
-
 const SignupScreen = () => {
   const { signup } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-//   const [role, setRole] = useState("user");
-  const [role, setRole] = useState<UserType>('user');
+  const [role, setRole] = useState<UserType>("user");
 
-//   const handleSignup = async () => {
-//     if (!email.trim() || !password.trim()) {
-//       Alert.alert("Error", "Please enter both email and password");
-//       return;
-//     }
-
-//     try {
-//       await signup(email, password, role);
-//       Alert.alert("Success", "Account created! Please log in.");
-//       router.replace("/login");
-//     } catch (error: any) {
-//         Alert.alert("Sign In Failed", error.message);
-//       }
-//   };
-const handleSignup = async () => {
+  const handleSignup = async () => {
     console.log("Attempting signup with email:", email, "and role:", role);
-  
+
     if (!email.trim() || !password.trim()) {
       Alert.alert("Error", "Please enter both email and password");
       return;
     }
-  
+
     try {
       await signup(email, password, role);
       Alert.alert("Success", "Account created! Please log in.");
       console.log("Navigating to login screen...");
-      router.replace("/login");  // Make sure this line gets executed
+      router.replace("/login");
     } catch (error: any) {
       console.error("Signup error:", error);
       Alert.alert("Sign In Failed", error.message);
     }
   };
-  
 
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 20,
+      }}
+    >
       <Text style={{ fontSize: 20, marginBottom: 10 }}>Sign Up</Text>
       <TextInput
         style={{
@@ -81,8 +70,20 @@ const handleSignup = async () => {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="Sign Up as User" onPress={() => { setRole("user"); handleSignup(); }} />
-      <Button title="Sign Up as Admin" onPress={() => { setRole("admin"); handleSignup(); }} />
+      <Button
+        title="Sign Up as User"
+        onPress={() => {
+          setRole("user");
+          handleSignup();
+        }}
+      />
+      <Button
+        title="Sign Up as Admin"
+        onPress={() => {
+          setRole("admin");
+          handleSignup();
+        }}
+      />
     </View>
   );
 };

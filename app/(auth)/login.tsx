@@ -1,13 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { View, Text, TextInput, Button, Alert, TouchableOpacity } from "react-native";
 import { useAuth } from "../../AuthProvider";
 import { useRouter } from "expo-router";
 
 const LoginScreen = () => {
-  const { login } = useAuth();
+  const { login, role } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+
+  useEffect(() => {
+    if (isLoggingIn && role) {
+      console.log("User role after login:", role);
+      if (role === "admin") {
+        router.replace("/adminHome");
+      } else {
+        router.replace("/userHome");
+      }
+      setIsLoggingIn(false); 
+    }
+  }, [role]);
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
@@ -16,10 +29,11 @@ const LoginScreen = () => {
     }
 
     try {
+      setIsLoggingIn(true); 
       await login(email, password);
-      router.replace("/userHome"); // or "/adminHome" based on role
     } catch (error: any) {
       Alert.alert("Login Failed", error.message);
+      setIsLoggingIn(false);
     }
   };
 
@@ -57,7 +71,6 @@ const LoginScreen = () => {
       />
       <Button title="Login" onPress={handleLogin} />
 
-      {/* Sign Up Button */}
       <TouchableOpacity onPress={() => router.push("/signUp")}>
         <Text style={{ color: "blue", marginTop: 10 }}>Don't have an account? Sign up</Text>
       </TouchableOpacity>
