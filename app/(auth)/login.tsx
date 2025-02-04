@@ -1,22 +1,40 @@
-import { useState } from "react";
-import { View, Text, TextInput, Button, Alert } from "react-native";
+import { useState, useEffect } from "react";
+import { View, Text, TextInput, Button, Alert, TouchableOpacity } from "react-native";
 import { useAuth } from "../../AuthProvider";
 import { useRouter } from "expo-router";
 
 const LoginScreen = () => {
-  const { login } = useAuth();
+  const { login, role } = useAuth();
   const router = useRouter();
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-  const handleLogin = () => {
-    if (!username.trim()) {
-      Alert.alert("Error", "Please enter a username");
+  useEffect(() => {
+    if (isLoggingIn && role) {
+      console.log("User role after login:", role);
+      if (role === "admin") {
+        router.replace("/adminHome");
+      } else {
+        router.replace("/userHome");
+      }
+      setIsLoggingIn(false); 
+    }
+  }, [role]);
+
+  const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert("Error", "Please enter both email and password");
       return;
     }
 
-    const role = username.toLowerCase() === "admin" ? "admin" : "user";
-    login(role);
-    router.replace(role === "admin" ? "/adminHome" : "/userHome");
+    try {
+      setIsLoggingIn(true); 
+      await login(email, password);
+    } catch (error: any) {
+      Alert.alert("Login Failed", error.message);
+      setIsLoggingIn(false);
+    }
   };
 
   return (
@@ -31,12 +49,31 @@ const LoginScreen = () => {
           borderRadius: 5,
           marginBottom: 10,
         }}
-        placeholder="Enter your username"
-        value={username}
-        onChangeText={setUsername}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
         autoCapitalize="none"
+        keyboardType="email-address"
+      />
+      <TextInput
+        style={{
+          width: "80%",
+          padding: 10,
+          borderWidth: 1,
+          borderColor: "#ccc",
+          borderRadius: 5,
+          marginBottom: 10,
+        }}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
       />
       <Button title="Login" onPress={handleLogin} />
+
+      <TouchableOpacity onPress={() => router.push("/signUp")}>
+        <Text style={{ color: "blue", marginTop: 10 }}>Don't have an account? Sign up</Text>
+      </TouchableOpacity>
     </View>
   );
 };
