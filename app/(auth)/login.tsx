@@ -22,7 +22,6 @@ interface LoginFormValues {
 const LoginScreen = () => {
   const { login, role } = useAuth();
   const router = useRouter();
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const initialValues: LoginFormValues = { email: "", password: "" };
@@ -38,10 +37,8 @@ const LoginScreen = () => {
   });
 
   useEffect(() => {
-    if (isLoggingIn && role) {
-      console.log("User role after login:", role);
+    if (role) {
       router.replace(role === "admin" ? "/adminHome" : "/userHome");
-      setIsLoggingIn(false);
     }
   }, [role]);
 
@@ -59,14 +56,12 @@ const LoginScreen = () => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
-          setIsLoggingIn(true);
           try {
             await login(values.email, values.password);
           } catch (error: any) {
             Alert.alert("Login Failed", error.message);
           } finally {
             setSubmitting(false);
-            setIsLoggingIn(false);
           }
         }}
       >
