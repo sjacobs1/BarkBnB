@@ -13,6 +13,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React from "react";
+import { authStyleSheet } from "./authStyleSheet";
 
 const SignupScreen = () => {
   const { signup } = useAuth();
@@ -31,15 +32,8 @@ const SignupScreen = () => {
   });
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 20,
-      }}
-    >
-      <Text style={{ fontSize: 20, marginBottom: 10 }}>Sign Up</Text>
+    <View style={authStyleSheet.mainContainer}>
+      <Text style={authStyleSheet.pageHeading}>Sign Up</Text>
       <Formik
         initialValues={{ email: "", password: "" }}
         validationSchema={validationSchema}
@@ -66,14 +60,10 @@ const SignupScreen = () => {
         }) => (
           <>
             <TextInput
-              style={{
-                width: "80%",
-                padding: 10,
-                borderWidth: 1,
-                borderColor: errors.email && touched.email ? "red" : "#ccc",
-                borderRadius: 5,
-                marginBottom: 10,
-              }}
+              style={[
+                authStyleSheet.emailTextBox,
+                { borderColor: errors.email && touched.email ? "red" : "#ccc" },
+              ]}
               placeholder="Email"
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
@@ -82,29 +72,20 @@ const SignupScreen = () => {
               keyboardType="email-address"
             />
             {errors.email && touched.email && (
-              <Text style={{ color: "red", marginBottom: 10 }}>
-                {errors.email}
-              </Text>
+              <Text style={authStyleSheet.errorText}>{errors.email}</Text>
             )}
 
             <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                width: "80%",
-                borderWidth: 1,
-                borderColor:
-                  errors.password && touched.password ? "red" : "#ccc",
-                borderRadius: 5,
-                marginBottom: 10,
-                paddingHorizontal: 10,
-              }}
+              style={[
+                authStyleSheet.passwordViewContainer,
+                {
+                  borderColor:
+                    errors.password && touched.password ? "red" : "#ccc",
+                },
+              ]}
             >
               <TextInput
-                style={{
-                  flex: 1,
-                  paddingVertical: 10,
-                }}
+                style={authStyleSheet.passwordTextBox}
                 placeholder="Password"
                 onChangeText={handleChange("password")}
                 onBlur={handleBlur("password")}
@@ -120,7 +101,7 @@ const SignupScreen = () => {
               </TouchableOpacity>
             </View>
             {errors.password && touched.password && (
-              <Text style={{ color: "red", marginBottom: 10 }}>
+              <Text style={authStyleSheet.errorText}>
                 {errors.password}
               </Text>
             )}
@@ -132,7 +113,7 @@ const SignupScreen = () => {
             />
 
             <TouchableOpacity onPress={() => router.replace("/login")}>
-              <Text style={{ color: "blue", marginTop: 10 }}>
+              <Text style={authStyleSheet.moveToOtherPageText}>
                 Already have an account? Log in
               </Text>
             </TouchableOpacity>
