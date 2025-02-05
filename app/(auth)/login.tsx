@@ -1,79 +1,155 @@
 import { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, Alert, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import { useAuth } from "../../AuthProvider";
 import { useRouter } from "expo-router";
+import * as Yup from "yup";
+import { Formik } from "formik";
+import React from "react";
+import Ionicons from "@expo/vector-icons/Ionicons";
+
+interface LoginFormValues {
+  email: string;
+  password: string;
+}
 
 const LoginScreen = () => {
   const { login, role } = useAuth();
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const initialValues: LoginFormValues = { email: "", password: "" };
+  const validationSchema = Yup.object({
+    email: Yup.string().email("Invalid email address").required("Required"),
+    password: Yup.string()
+      .min(6, "Password must be at least 6 characters")
+      .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+      .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .matches(/[0-9]/, "Password must contain at least one number")
+      .matches(/[\W_]/, "Password must contain at least one special character")
+      .required("Required"),
+  });
 
   useEffect(() => {
-    if (isLoggingIn && role) {
-      console.log("User role after login:", role);
-      if (role === "admin") {
-        router.replace("/adminHome");
-      } else {
-        router.replace("/userHome");
-      }
-      setIsLoggingIn(false); 
+    if (role) {
+      router.replace(role === "admin" ? "/adminHome" : "/userHome");
     }
   }, [role]);
 
-  const handleLogin = async () => {
-    if (!email.trim() || !password.trim()) {
-      Alert.alert("Error", "Please enter both email and password");
-      return;
-    }
-
-    try {
-      setIsLoggingIn(true); 
-      await login(email, password);
-    } catch (error: any) {
-      Alert.alert("Login Failed", error.message);
-      setIsLoggingIn(false);
-    }
-  };
-
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 20,
+      }}
+    >
       <Text style={{ fontSize: 20, marginBottom: 10 }}>Login Page</Text>
-      <TextInput
-        style={{
-          width: "80%",
-          padding: 10,
-          borderWidth: 1,
-          borderColor: "#ccc",
-          borderRadius: 5,
-          marginBottom: 10,
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            await login(values.email, values.password);
+          } catch (error: any) {
+            Alert.alert("Login Failed", error.message);
+          } finally {
+            setSubmitting(false);
+          }
         }}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={{
-          width: "80%",
-          padding: 10,
-          borderWidth: 1,
-          borderColor: "#ccc",
-          borderRadius: 5,
-          marginBottom: 10,
-        }}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button title="Login" onPress={handleLogin} />
+      >
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+          isSubmitting,
+        }) => (
+          <>
+            <TextInput
+              style={{
+                width: "100%",
+                padding: 10,
+                borderWidth: 1,
+                borderColor: errors.email && touched.email ? "red" : "#ccc",
+                borderRadius: 5,
+                marginBottom: 10,
+              }}
+              placeholder="Email"
+              onChangeText={handleChange("email")}
+              onBlur={handleBlur("email")}
+              value={values.email}
+              autoCapitalize="none"
+              keyboardType="email-address"
+            />
+            {errors.email && touched.email && (
+              <Text style={{ color: "red", marginBottom: 10 }}>
+                {errors.email}
+              </Text>
+            )}
 
-      <TouchableOpacity onPress={() => router.push("/signUp")}>
-        <Text style={{ color: "blue", marginTop: 10 }}>Don't have an account? Sign up</Text>
-      </TouchableOpacity>
+            <View
+              style={{
+                width: "100%",
+                flexDirection: "row",
+                alignItems: "center",
+                borderWidth: 1,
+                borderColor:
+                  errors.password && touched.password ? "red" : "#ccc",
+                borderRadius: 5,
+                marginBottom: 10,
+                paddingHorizontal: 10,
+              }}
+            >
+              <TextInput
+                style={{
+                  flex: 1,
+                  paddingVertical: 10,
+                }}
+                placeholder="Password"
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
+                value={values.password}
+                secureTextEntry={!showPassword}
+              />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                {showPassword ? (
+                  <Ionicons name="eye-off-outline" size={24} color="black" />
+                ) : (
+                  <Ionicons name="eye-outline" size={24} color="black" />
+                )}
+              </TouchableOpacity>
+            </View>
+
+            {errors.password && touched.password && (
+              <Text style={{ color: "red", marginBottom: 10 }}>
+                {errors.password}
+              </Text>
+            )}
+
+            <Button
+              title="Login"
+              onPress={() => handleSubmit()}
+              disabled={isSubmitting}
+            />
+
+            <TouchableOpacity onPress={() => router.push("/signUp")}>
+              <Text style={{ color: "blue", marginTop: 10 }}>
+                Don't have an account? Sign up
+              </Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </Formik>
     </View>
   );
 };
