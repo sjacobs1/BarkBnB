@@ -6,6 +6,7 @@ import {
   Button,
   Alert,
   TouchableOpacity,
+  StyleSheet,
 } from "react-native";
 import { useAuth } from "../../AuthProvider";
 import { useRouter } from "expo-router";
@@ -13,6 +14,7 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { authStyleSheet } from "./authStyleSheet";
 
 interface LoginFormValues {
   email: string;
@@ -43,15 +45,8 @@ const LoginScreen = () => {
   }, [role]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 20,
-      }}
-    >
-      <Text style={{ fontSize: 20, marginBottom: 10 }}>Login Page</Text>
+    <View style={authStyleSheet.mainContainer}>
+      <Text style={authStyleSheet.pageHeading}>Login Page</Text>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -76,14 +71,10 @@ const LoginScreen = () => {
         }) => (
           <>
             <TextInput
-              style={{
-                width: "100%",
-                padding: 10,
-                borderWidth: 1,
-                borderColor: errors.email && touched.email ? "red" : "#ccc",
-                borderRadius: 5,
-                marginBottom: 10,
-              }}
+              style={[
+                authStyleSheet.emailTextBox,
+                { borderColor: errors.email && touched.email ? "red" : "#ccc" },
+              ]}
               placeholder="Email"
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
@@ -92,29 +83,22 @@ const LoginScreen = () => {
               keyboardType="email-address"
             />
             {errors.email && touched.email && (
-              <Text style={{ color: "red", marginBottom: 10 }}>
+              <Text style={authStyleSheet.errorText}>
                 {errors.email}
               </Text>
             )}
 
             <View
-              style={{
-                width: "100%",
-                flexDirection: "row",
-                alignItems: "center",
-                borderWidth: 1,
-                borderColor:
-                  errors.password && touched.password ? "red" : "#ccc",
-                borderRadius: 5,
-                marginBottom: 10,
-                paddingHorizontal: 10,
-              }}
+              style={[
+                authStyleSheet.passwordViewContainer,
+                {
+                  borderColor:
+                    errors.password && touched.password ? "red" : "#ccc",
+                },
+              ]}
             >
               <TextInput
-                style={{
-                  flex: 1,
-                  paddingVertical: 10,
-                }}
+                style={authStyleSheet.passwordTextBox}
                 placeholder="Password"
                 onChangeText={handleChange("password")}
                 onBlur={handleBlur("password")}
@@ -131,7 +115,7 @@ const LoginScreen = () => {
             </View>
 
             {errors.password && touched.password && (
-              <Text style={{ color: "red", marginBottom: 10 }}>
+              <Text style={authStyleSheet.errorText}>
                 {errors.password}
               </Text>
             )}
@@ -143,7 +127,7 @@ const LoginScreen = () => {
             />
 
             <TouchableOpacity onPress={() => router.push("/signUp")}>
-              <Text style={{ color: "blue", marginTop: 10 }}>
+              <Text style={authStyleSheet.moveToOtherPageText}>
                 Don't have an account? Sign up
               </Text>
             </TouchableOpacity>
@@ -155,3 +139,5 @@ const LoginScreen = () => {
 };
 
 export default LoginScreen;
+
+
