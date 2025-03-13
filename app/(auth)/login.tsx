@@ -6,7 +6,11 @@ import {
   Button,
   Alert,
   TouchableOpacity,
-  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import { useAuth } from "../../AuthProvider";
 import { useRouter } from "expo-router";
@@ -14,7 +18,9 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 import React from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { authStyleSheet } from "./authStyleSheet";
+// @ts-ignore
+import Logo from "../../assets/logo.svg";
+import style from "./authStyleSheet";
 
 interface LoginFormValues {
   email: string;
@@ -45,8 +51,16 @@ const LoginScreen = () => {
   }, [role]);
 
   return (
-    <View style={authStyleSheet.mainContainer}>
-      <Text style={authStyleSheet.pageHeading}>Login Page</Text>
+    <KeyboardAvoidingView
+      behavior="padding"
+      // keyboardVerticalOffset={0.5}
+      style={style.mainContainer}
+    >
+      <View style={style.logoContainer}>
+        <Logo height={150} width={150} />
+      </View>
+      <Text style={style.signInText}>Sign In</Text>
+      <Text>Enter your details to continue</Text>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -70,74 +84,78 @@ const LoginScreen = () => {
           isSubmitting,
         }) => (
           <>
-            <TextInput
-              style={[
-                authStyleSheet.emailTextBox,
-                { borderColor: errors.email && touched.email ? "red" : "#ccc" },
-              ]}
-              placeholder="Email"
-              onChangeText={handleChange("email")}
-              onBlur={handleBlur("email")}
-              value={values.email}
-              autoCapitalize="none"
-              keyboardType="email-address"
-            />
-            {errors.email && touched.email && (
-              <Text style={authStyleSheet.errorText}>
-                {errors.email}
-              </Text>
-            )}
-
-            <View
-              style={[
-                authStyleSheet.passwordViewContainer,
-                {
-                  borderColor:
-                    errors.password && touched.password ? "red" : "#ccc",
-                },
-              ]}
-            >
+            <View style={style.textBoxesContainer}>
               <TextInput
-                style={authStyleSheet.passwordTextBox}
-                placeholder="Password"
-                onChangeText={handleChange("password")}
-                onBlur={handleBlur("password")}
-                value={values.password}
-                secureTextEntry={!showPassword}
+                style={[
+                  style.emailInput,
+                  {
+                    borderColor:
+                      errors.email && touched.email ? "red" : "#b19172",
+                  },
+                ]}
+                placeholder="Email"
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
+                value={values.email}
+                autoCapitalize="none"
+                keyboardType="email-address"
               />
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                {showPassword ? (
-                  <Ionicons name="eye-off-outline" size={24} color="black" />
-                ) : (
-                  <Ionicons name="eye-outline" size={24} color="black" />
-                )}
-              </TouchableOpacity>
+              <Text style={style.requiredErrorText}>
+                {errors.email && touched.email ? errors.email : " "}
+              </Text>
+
+              <View
+                style={[
+                  style.passwordInputContainer,
+                  {
+                    borderColor:
+                      errors.password && touched.password ? "red" : "#b19172",
+                  },
+                ]}
+              >
+                <TextInput
+                  style={style.passwordInput}
+                  placeholder="Password"
+                  onChangeText={handleChange("password")}
+                  onBlur={handleBlur("password")}
+                  value={values.password}
+                  secureTextEntry={!showPassword}
+                />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <Ionicons name="eye-off-outline" size={24} color="black" />
+                  ) : (
+                    <Ionicons name="eye-outline" size={24} color="black" />
+                  )}
+                </TouchableOpacity>
+              </View>
+
+              <Text style={style.requiredErrorText}>
+                {errors.password && touched.password ? errors.password : " "}
+              </Text>
             </View>
 
-            {errors.password && touched.password && (
-              <Text style={authStyleSheet.errorText}>
-                {errors.password}
-              </Text>
-            )}
-
-            <Button
-              title="Login"
+            <TouchableOpacity
+              style={[style.loginButton, { opacity: isSubmitting ? 0.5 : 1 }]}
               onPress={() => handleSubmit()}
               disabled={isSubmitting}
-            />
+            >
+              <Text style={style.loginButtonText}>Login</Text>
+            </TouchableOpacity>
 
             <TouchableOpacity onPress={() => router.push("/signUp")}>
-              <Text style={authStyleSheet.moveToOtherPageText}>
-                Don't have an account? Sign up
+              <Text style={style.signUpText}>
+                Don't have an account?
+                <Text style={style.signUpLink}> Sign up</Text>
               </Text>
             </TouchableOpacity>
           </>
         )}
       </Formik>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
 export default LoginScreen;
-
-
