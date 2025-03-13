@@ -3,14 +3,9 @@ import {
   View,
   Text,
   TextInput,
-  Button,
   Alert,
   TouchableOpacity,
   KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  TouchableWithoutFeedback,
-  Keyboard,
 } from "react-native";
 import { useAuth } from "../../AuthProvider";
 import { useRouter } from "expo-router";
@@ -51,15 +46,11 @@ const LoginScreen = () => {
   }, [role]);
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      // keyboardVerticalOffset={0.5}
-      style={style.mainContainer}
-    >
+    <KeyboardAvoidingView behavior="padding" style={style.mainContainer}>
       <View style={style.logoContainer}>
         <Logo height={150} width={150} />
       </View>
-      <Text style={style.signInText}>Sign In</Text>
+      <Text style={style.pageHeading}>Sign In</Text>
       <Text>Enter your details to continue</Text>
       <Formik
         initialValues={initialValues}
@@ -138,17 +129,17 @@ const LoginScreen = () => {
             </View>
 
             <TouchableOpacity
-              style={[style.loginButton, { opacity: isSubmitting ? 0.5 : 1 }]}
+              style={[style.actionButton, { opacity: isSubmitting ? 0.5 : 1 }]}
               onPress={() => handleSubmit()}
               disabled={isSubmitting}
             >
-              <Text style={style.loginButtonText}>Login</Text>
+              <Text style={style.actionButtonText}>Login</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => router.push("/signUp")}>
-              <Text style={style.signUpText}>
+              <Text style={style.moveToAlternatePageLink}>
                 Don't have an account?
-                <Text style={style.signUpLink}> Sign up</Text>
+                <Text style={style.highlitedText}> Sign up</Text>
               </Text>
             </TouchableOpacity>
           </>
