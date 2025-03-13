@@ -1,10 +1,12 @@
 import { View, Text, Button } from "react-native";
 import { useAuth } from "../../AuthProvider";
 import { useRouter } from "expo-router";
+import { useUserStore } from "../../hooks/UserStore";
 
 const AdminHome = () => {
   const { logout } = useAuth();
-  console.log("Role:", useAuth().role);
+  const { user } = useUserStore();
+  console.log("Role:", user?.role);
   const router = useRouter();
 
   const navigateLogin = () => {

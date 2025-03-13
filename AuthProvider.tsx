@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import {
-  User,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
@@ -8,14 +7,13 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "./firebaseConfig";
+import { useUserStore } from "./hooks/UserStore";
 
 export type UserType = "user" | "admin" | null;
 
 interface AuthContextType {
-  user: User | null;
-  role: UserType | string;
   login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string, role: UserType) => Promise<void>;
+  signup: (email: string, password: string, role: string) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -23,31 +21,34 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const ADMIN_UIDS = ["LlowqXkGoOPfY3mYGM0eVmWooDA3"];
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [role, setRole] = useState<UserType>(null);
+  const { setUser, clearUser } = useUserStore();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-
       if (currentUser) {
+        const userRef = doc(db, "users", currentUser.uid);
+        const userSnapshot = await getDoc(userRef);
+
+        let role = "user";
         if (ADMIN_UIDS.includes(currentUser.uid)) {
-          setRole("admin");
-        } else {
-          const roleDoc = await getDoc(doc(db, "users", currentUser.uid));
-          if (roleDoc.exists()) {
-            setRole(roleDoc.data().role);
-          } else {
-            setRole("user");
-          }
+          role = "admin";
+        } else if (userSnapshot.exists()) {
+          role = userSnapshot.data()?.role || "user";
         }
+
+        setUser({
+          id: currentUser.uid,
+          name: currentUser.displayName || "",
+          email: currentUser.email || "",
+          role,
+        });
       } else {
-        setRole(null);
+        clearUser();
       }
     });
 
     return unsubscribe;
-  }, []);
+  }, [setUser, clearUser]);
 
   const login = async (email: string, password: string) => {
     const userCredential = await signInWithEmailAndPassword(
@@ -57,19 +58,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     );
     const uid = userCredential.user.uid;
 
+    const userReference = doc(db, "users", uid);
+    const userSnapshot = await getDoc(userReference);
+
+    let role = "user";
     if (ADMIN_UIDS.includes(uid)) {
-      setRole("admin");
-    } else {
-      const roleDoc = await getDoc(doc(db, "users", uid));
-      if (roleDoc.exists()) {
-        setRole(roleDoc.data().role);
-      } else {
-        setRole("user");
-      }
+      role = "admin";
+    } else if (userSnapshot.exists()) {
+      role = userSnapshot.data()?.role || "user";
     }
+
+    setUser({
+      id: uid,
+      name: userCredential.user.displayName || "",
+      email: userCredential.user.email || "",
+      role,
+    });
   };
 
-  const signup = async (email: string, password: string, role: UserType) => {
+  const signup = async (email: string, password: string, role: string) => {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
@@ -78,17 +85,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const uid = userCredential.user.uid;
     const userRole = ADMIN_UIDS.includes(uid) ? "admin" : role;
 
-    await setDoc(doc(db, "users", uid), { role: userRole });
-    setRole(userRole);
+    const user = {
+      id: uid,
+      name: userCredential.user.displayName || "",
+      email: userCredential.user.email || "",
+      role: userRole,
+    };
+
+    await setDoc(doc(db, "users", uid), user);
+    clearUser();
   };
 
   const logout = async () => {
     await signOut(auth);
-    setRole(null);
+    clearUser();
   };
 
   return (
-    <AuthContext.Provider value={{ user, role, login, signup, logout }}>
+    <AuthContext.Provider value={{ login, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );
