@@ -6,18 +6,15 @@ const style = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    // backgroundColor: "#E2E2E2",
     backgroundColor: "#E1E1E1",
   },
   logoContainer: {
-    // marginTop: 80,
     backgroundColor: "#225560",
-    // backgroundColor: "#225560",
     borderRadius: 100,
     borderWidth: 7,
     borderColor: "#FFA025",
   },
-  signInText : {
+  pageHeading : {
     fontSize: 20,
     marginVertical: 10
   },
@@ -55,7 +52,7 @@ const style = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
   },
-  loginButton: {
+  actionButton: {
     width: "100%",
     height: 50,
     backgroundColor: "#225560",
@@ -64,21 +61,19 @@ const style = StyleSheet.create({
     marginBottom: 10,
     justifyContent: "center",
   },
-  loginButtonText: {
+  actionButtonText: {
     color: "white",
     textAlign: "center",
     fontWeight: "bold"
   },
-  signUpText: {
+  moveToAlternatePageLink: {
     marginTop: 10,
   },
-  signUpLink : {
+  highlitedText : {
     color: "#FFA025",
-    // color: "#E4C357",
     fontWeight: "bold"
   },
   formikView: {
-    // backgroundColor: "red",
     width: "100%",
     gap: 20
   }
