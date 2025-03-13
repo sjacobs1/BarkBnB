@@ -16,6 +16,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 // @ts-ignore
 import Logo from "../../assets/logo.svg";
 import style from "./authStyleSheet";
+import { useUserStore } from "../../hooks/UserStore";
 
 interface LoginFormValues {
   email: string;
@@ -23,7 +24,8 @@ interface LoginFormValues {
 }
 
 const LoginScreen = () => {
-  const { login, role } = useAuth();
+  const { login } = useAuth();
+  const { user, fetchUser } = useUserStore();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -40,10 +42,14 @@ const LoginScreen = () => {
   });
 
   useEffect(() => {
-    if (role) {
-      router.replace(role === "admin" ? "/adminHome" : "/userHome");
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    if (user?.role) {
+      router.replace(user.role === "admin" ? "/adminHome" : "/userHome");
     }
-  }, [role]);
+  }, [user?.role]);
 
   return (
     <KeyboardAvoidingView behavior="padding" style={style.mainContainer}>

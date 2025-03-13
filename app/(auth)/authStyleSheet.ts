@@ -14,14 +14,14 @@ const style = StyleSheet.create({
     borderWidth: 7,
     borderColor: "#FFA025",
   },
-  pageHeading : {
+  pageHeading: {
     fontSize: 20,
-    marginVertical: 10
+    marginVertical: 10,
   },
-  textBoxesContainer : {
+  textBoxesContainer: {
     width: "100%",
     marginBottom: 5,
-    marginTop: 60
+    marginTop: 60,
   },
   emailInput: {
     width: "100%",
@@ -35,7 +35,7 @@ const style = StyleSheet.create({
   requiredErrorText: {
     color: "red",
     minHeight: 20,
-    marginBottom: 10
+    marginBottom: 10,
   },
   passwordInputContainer: {
     width: "100%",
@@ -64,19 +64,19 @@ const style = StyleSheet.create({
   actionButtonText: {
     color: "white",
     textAlign: "center",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   moveToAlternatePageLink: {
     marginTop: 10,
   },
-  highlitedText : {
+  highlitedText: {
     color: "#FFA025",
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   formikView: {
     width: "100%",
-    gap: 20
-  }
+    gap: 20,
+  },
 });
 
-export default style
+export default style;
