@@ -13,7 +13,14 @@ export type UserType = "user" | "admin" | null;
 
 interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string, role: string) => Promise<void>;
+  signup: (
+    firstName: string,
+    lastName: string,
+    cellNumber: string,
+    email: string,
+    password: string,
+    role: string
+  ) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -38,7 +45,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         setUser({
           id: currentUser.uid,
-          name: currentUser.displayName || "",
+          firstName: currentUser.displayName || "",
+          lastName: "",
+          cellNumber: "",
           email: currentUser.email || "",
           role,
         });
@@ -70,13 +79,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     setUser({
       id: uid,
-      name: userCredential.user.displayName || "",
+      firstName: userSnapshot.data()?.firstName,
+      lastName: userSnapshot.data()?.lastName,
+      cellNumber: userSnapshot.data()?.cellNumber,
       email: userCredential.user.email || "",
       role,
     });
   };
 
-  const signup = async (email: string, password: string, role: string) => {
+  const signup = async (
+    firstName: string,
+    lastName: string,
+    cellNumber: string,
+    email: string,
+    password: string,
+    role: string
+  ) => {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
@@ -87,8 +105,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const user = {
       id: uid,
-      name: userCredential.user.displayName || "",
-      email: userCredential.user.email || "",
+      firstName,
+      lastName,
+      cellNumber,
+      email,
       role: userRole,
     };
 

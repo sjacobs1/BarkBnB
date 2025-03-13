@@ -6,7 +6,7 @@ import { useUserStore } from "../../hooks/UserStore";
 const AdminHome = () => {
   const { logout } = useAuth();
   const { user } = useUserStore();
-  console.log("Role:", user?.role);
+  console.log("User:", user);
   const router = useRouter();
 
   const navigateLogin = () => {

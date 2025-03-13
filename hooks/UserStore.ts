@@ -5,7 +5,9 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 
 interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
+  cellNumber: string;
   email: string;
   role: string;
 }
@@ -37,7 +39,9 @@ export const useUserStore = create<UserStore>()(
       const userData = userSnapshot.data();
       const user = {
         id: currentUser.uid,
-        name: userData.name,
+        firstName: userData.firstName || "",
+        lastName: userData.lastName || "",
+        cellNumber: userData.cellNumber || "",
         email: userData.email,
         role: userData.role,
       };
