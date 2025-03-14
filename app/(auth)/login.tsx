@@ -47,7 +47,7 @@ const LoginScreen = () => {
 
   useEffect(() => {
     if (user?.role) {
-      router.replace(user.role === "admin" ? "/adminHome" : "/userHome");
+      router.replace(user.role === "admin" ? "/adminHome" : "/(user)/");
     }
   }, [user?.role]);
 
