@@ -1,7 +1,7 @@
 import { View, Text, ScrollView } from "react-native";
 import React from "react";
-import UserProfileCard from "../../components/user/profileComponents/userProfile/userProfileCard";
-import PetProfileCard from "../../components/user/profileComponents/petProfile/petProfileCard";
+import UserProfileCard from "../../components/user/profileScreenComponents/userProfile/userProfileCard";
+import PetProfileCard from "../../components/user/profileScreenComponents/petProfile/petProfileCard";
 import { useUserStore } from "../../hooks/UserStore";
 import style from "../../pageStyleSheets/profileStyleSheet";
 import { SafeAreaView } from "react-native-safe-area-context";
