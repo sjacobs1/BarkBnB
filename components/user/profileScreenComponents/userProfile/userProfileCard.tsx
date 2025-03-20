@@ -5,6 +5,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { router, useRouter } from "expo-router";
 import { useAuth } from "../../../../AuthProvider";
 import { useUserStore } from "../../../../hooks/UserStore";
+import userLogoutHandler from "../../../../logic/user/profileScreenLogic/userLogoutHandler";
 
 interface userProfileCardProps {
   name: string | undefined;
@@ -13,19 +14,7 @@ interface userProfileCardProps {
 }
 
 const UserProfileCard = ({ name, email, cellNumber }: userProfileCardProps) => {
-  const { logout } = useAuth();
-  const { user } = useUserStore();
-  console.log("Role:", user?.role);
-  const router = useRouter();
-
-  const navigateLogin = () => {
-    router.push("/(auth)/login");
-  };
-
-  const userSignOut = async () => {
-    await logout();
-    navigateLogin();
-  };
+  const {userSignOut} = userLogoutHandler()
 
   return (
     <View style={style.mainContainer}>
