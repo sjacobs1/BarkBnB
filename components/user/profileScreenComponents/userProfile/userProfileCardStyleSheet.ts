@@ -5,7 +5,6 @@ const style = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    // padding: 10,
     gap: 10,
     backgroundColor: "white",
   },
@@ -16,7 +15,6 @@ const style = StyleSheet.create({
     height: 50,
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "red",
     paddingTop: 10,
   },
   editIconContainer: {
@@ -34,7 +32,6 @@ const style = StyleSheet.create({
     justifyContent: "space-between",
     gap: 5,
     flexDirection: "row",
-    // backgroundColor: "yellow",
     marginBottom: 5,
     paddingHorizontal: 10,
   },
@@ -48,7 +45,7 @@ const style = StyleSheet.create({
     borderRadius: 30,
   },
   iconContainer: {
-    backgroundColor: "#E1E1E1",
+    backgroundColor: "#EBEBEB",
     justifyContent: "center",
     alignItems: "center",
     width: 35,
@@ -58,16 +55,14 @@ const style = StyleSheet.create({
     borderWidth: 2,
   },
   userContactTextContainer: {
-    // backgroundColor: "red",
     gap: 5,
-    justifyContent: "center",
     alignItems: "flex-start",
   },
   userContactText: {
     fontWeight: 300,
   },
   logoutContainer: {
-    backgroundColor: "#A4D4DF",
+    backgroundColor: "#F0F8FA",
     width: "100%",
     padding: 20,
     alignItems: "center",
@@ -77,13 +72,14 @@ const style = StyleSheet.create({
   logoutButton: {
     width: "70%",
     height: 50,
-    backgroundColor: "#225560",
     borderRadius: 5,
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: "#225560",
   },
   logoutText: {
     textAlign: "center",
-    color: "white",
+    color: "#225560",
   },
 });
 
