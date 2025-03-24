@@ -1,3 +1,10 @@
 export function formatCellphoneNumber(cellNumber: string | undefined) {
-    return `${cellNumber?.slice(0, 3)} ${cellNumber?.slice(3, 6)} ${cellNumber?.slice(6)}`;
-}
+    if (!cellNumber || cellNumber.length < 9) {
+      return cellNumber ?? ""; // Return empty string if undefined
+    }
+  
+    const cleanedNumber = cellNumber.replace(/\D/g, ""); // Remove non-numeric characters
+  
+    return `${cleanedNumber.slice(0, 3)} ${cleanedNumber.slice(3, 6)} ${cleanedNumber.slice(6)}`;
+  }
+  
