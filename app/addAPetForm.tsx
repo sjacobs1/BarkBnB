@@ -4,23 +4,15 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
+  ScrollView,
 } from "react-native";
 import style from "../pageStyleSheets/addAPetFormStyleSheet";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
-
-const BREEDS = [
-  "Labrador Retriever",
-  "Golden Retriever",
-  "German Shepherd",
-  "Poodle",
-  "Bulldog",
-  "Beagle",
-  "Chihuahua",
-  "Dachshund",
-];
+import BREEDS from "../utils/dogBreedsList";
+import { SegmentedButtons } from "react-native-paper";
 
 const AddAPet = () => {
   const [filteredBreeds, setFilteredBreeds] = useState(BREEDS);
@@ -56,334 +48,324 @@ const AddAPet = () => {
   });
 
   return (
-    <Formik
-      initialValues={{
-        petName: "",
-        birthDate: new Date(),
-        gender: "",
-        breed: "",
-        sterilised: "",
-        vaccinated: "",
-        medicalNeeds: "",
-        dietaryNeeds: "",
-        medicalDetails: "",
-        dietaryDetails: "",
-      }}
-      validationSchema={validationSchema}
-      onSubmit={(values) => console.log(values)}
+    <ScrollView
+      automaticallyAdjustKeyboardInsets={true}
+      style={style.scrollView}
     >
-      {({
-        handleChange,
-        handleSubmit,
-        handleBlur,
-        values,
-        errors,
-        touched,
-        setFieldValue,
-      }) => (
-        <View style={{ padding: 20 }}>
-          <Text>Pet Name</Text>
-          <TextInput
-            style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
-            placeholder="Name"
-            onChangeText={handleChange("petName")}
-            onBlur={handleBlur("petName")}
-            value={values.petName}
-          />
-          {touched.petName && errors.petName && (
-            <Text style={{ color: "red" }}>{errors.petName}</Text>
-          )}
+      <Formik
+        initialValues={{
+          petName: "",
+          birthDate: new Date(),
+          gender: "",
+          breed: "",
+          sterilised: "",
+          vaccinated: "",
+          medicalNeeds: "",
+          dietaryNeeds: "",
+          medicalDetails: "",
+          dietaryDetails: "",
+        }}
+        validationSchema={validationSchema}
+        onSubmit={(values) => console.log(values)}
+      >
+        {({
+          handleChange,
+          handleSubmit,
+          handleBlur,
+          values,
+          errors,
+          touched,
+          setFieldValue,
+        }) => (
+          <View style={style.mainContainer}>
+            <View style={style.formHeadingContainer}>
+              <Text style={style.formHeadingText}>
+                We need a few details about your furry firend.{"\n"}
+                Please enter your pet's information below !
+              </Text>
+            </View>
+            <View style={style.questionSectionContainer}>
+              <Text>Name</Text>
+              <TextInput
+                style={[
+                  style.textInput,
+                  {
+                    borderColor:
+                      errors.petName && touched.petName ? "red" : "#b19172",
+                  },
+                ]}
+                placeholder="Your pet's name"
+                onChangeText={handleChange("petName")}
+                onBlur={handleBlur("petName")}
+                value={values.petName}
+              />
+              {touched.petName && errors.petName && (
+                <Text style={style.requiredErrorText}>{errors.petName}</Text>
+              )}
+            </View>
 
-          <Text>Birth Date</Text>
-          <DateTimePicker
-            value={values.birthDate}
-            mode="date"
-            display="default"
-            onChange={(event, selectedDate) =>
-              setFieldValue("birthDate", selectedDate || values.birthDate)
-            }
-          />
-          {touched.birthDate &&
-            errors.birthDate &&
-            typeof errors.birthDate === "string" && (
-              <Text style={{ color: "red" }}>{errors.birthDate}</Text>
-            )}
+            <View style={style.questionSectionContainer}>
+              <Text>Birth Date</Text>
+              <DateTimePicker
+                value={values.birthDate}
+                mode="date"
+                display="default"
+                onChange={(event, selectedDate) =>
+                  setFieldValue("birthDate", selectedDate || values.birthDate)
+                }
+              />
+              {touched.birthDate &&
+                errors.birthDate &&
+                typeof errors.birthDate === "string" && (
+                  <Text style={style.requiredErrorText}>
+                    {errors.birthDate}
+                  </Text>
+                )}
+            </View>
 
-          <Text>Breed</Text>
-          <TextInput
-            style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
-            value={values.breed}
-            onFocus={() => setShowDropdown(true)}
-            onChangeText={(text) => {
-              setFieldValue("breed", text);
-              setFilteredBreeds(
-                BREEDS.filter((b) =>
-                  b.toLowerCase().includes(text.toLowerCase())
-                )
-              );
-              setShowDropdown(true);
-            }}
-          />
-          {showDropdown && (
-            <FlatList
-              data={filteredBreeds}
-              keyExtractor={(item) => item}
-              style={{ maxHeight: 100, borderWidth: 1 }}
-              renderItem={({ item }) => (
+            <View style={style.questionSectionContainer}>
+              <Text>Breed</Text>
+              <TextInput
+                style={[
+                  style.textInput,
+                  {
+                    borderColor:
+                      errors.breed && touched.breed ? "red" : "#b19172",
+                  },
+                ]}
+                placeholder="eg: Labrador"
+                value={values.breed}
+                onFocus={() => setShowDropdown(false)}
+                onChangeText={(text) => {
+                  setFieldValue("breed", text);
+                  if (text) {
+                    setFilteredBreeds(
+                      BREEDS.filter((b) =>
+                        b.toLowerCase().includes(text.toLowerCase())
+                      )
+                    );
+                    setShowDropdown(true);
+                  } else {
+                    setShowDropdown(false);
+                  }
+                }}
+              />
+
+              {showDropdown && filteredBreeds.length > 0 && (
                 <TouchableOpacity
                   onPress={() => {
-                    setFieldValue("breed", item);
+                    setFieldValue("breed", filteredBreeds[0]);
                     setShowDropdown(false);
                   }}
-                  style={{ padding: 10, borderBottomWidth: 1 }}
+                  style={style.petBreedFilteredList}
                 >
-                  <Text>{item}</Text>
+                  <Text>{filteredBreeds[0]}</Text>
                 </TouchableOpacity>
               )}
-            />
-          )}
-          {touched.breed && errors.breed && (
-            <Text style={{ color: "red" }}>{errors.breed}</Text>
-          )}
 
-          <Text>Gender</Text>
-          <View style={{ flexDirection: "row", marginVertical: 10 }}>
-            {["male", "female"].map((genderOption) => (
-              <TouchableOpacity
-                key={genderOption}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginRight: 15,
-                }}
-                onPress={() => setFieldValue("gender", genderOption)}
-              >
-                <View
-                  style={{
-                    height: 20,
-                    width: 20,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginRight: 5,
-                  }}
-                >
-                  {values.gender === genderOption && (
-                    <View
-                      style={{
-                        height: 10,
-                        width: 10,
-                        borderRadius: 5,
-                        backgroundColor: "red",
-                      }}
-                    />
+              {touched.breed && errors.breed && (
+                <Text style={style.requiredErrorText}>{errors.breed}</Text>
+              )}
+            </View>
+
+            <View style={style.questionSectionContainer}>
+              <Text>Gender</Text>
+              <SegmentedButtons
+                value={values.gender}
+                onValueChange={(value) => setFieldValue("gender", value)}
+                buttons={[
+                  {
+                    value: "male",
+                    label: "Male",
+                    style: [
+                      values.gender === "male" ? { backgroundColor: "#b19172" } : {},
+                      { borderRadius: 5 },
+                    ],
+                    labelStyle: values.gender === "male" ? { color: "white" } : { color: "black" },
+                  },
+                  {
+                    value: "female",
+                    label: "Female",
+                    style: [
+                      values.gender === "female" ? { backgroundColor: "#b19172" } : {},
+                      { borderRadius: 5 },
+                    ],
+                    labelStyle: values.gender === "female" ? { color: "white" } : { color: "black" },
+                  },
+                ]}
+                style={{}}
+              />
+              {touched.gender && errors.gender && (
+                <Text style={style.requiredErrorText}>{errors.gender}</Text>
+              )}
+            </View>
+
+            <View style={style.questionSectionContainer}>
+              <Text>Is your pet spayed or neutered?</Text>
+              <View style={style.questionOptionsContainer}>
+                {["yes", "no"].map((option) => (
+                  <TouchableOpacity
+                    key={option}
+                    style={style.optionSpecificContainer}
+                    onPress={() => setFieldValue("sterilised", option)}
+                  >
+                    <View style={style.radioButton}>
+                      {values.sterilised === option && (
+                        <View style={style.selectedRadioButton} />
+                      )}
+                    </View>
+                    <Text style={style.answerText}>
+                      {option.charAt(0).toUpperCase() + option.slice(1)}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              {touched.sterilised && errors.sterilised && (
+                <Text style={style.requiredErrorText}>{errors.sterilised}</Text>
+              )}
+            </View>
+
+            <View style={style.questionSectionContainer}>
+              <Text>Are your pet’s vaccinations up to date?</Text>
+              <View style={style.questionOptionsContainer}>
+                {["yes", "no"].map((option) => (
+                  <TouchableOpacity
+                    key={option}
+                    style={style.optionSpecificContainer}
+                    onPress={() => setFieldValue("vaccinated", option)}
+                  >
+                    <View style={style.radioButton}>
+                      {values.vaccinated === option && (
+                        <View style={style.selectedRadioButton} />
+                      )}
+                    </View>
+                    <Text style={style.answerText}>
+                      {option.charAt(0).toUpperCase() + option.slice(1)}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              {touched.vaccinated && errors.vaccinated && (
+                <Text style={style.requiredErrorText}>{errors.vaccinated}</Text>
+              )}
+            </View>
+
+            <View style={style.questionSectionContainer}>
+              <Text>Does your pet have any medical conditions?</Text>
+              <View style={style.questionOptionsContainer}>
+                {["yes", "no"].map((option) => (
+                  <TouchableOpacity
+                    key={option}
+                    style={style.optionSpecificContainer}
+                    onPress={() => setFieldValue("medicalNeeds", option)}
+                  >
+                    <View style={style.radioButton}>
+                      {values.medicalNeeds === option && (
+                        <View style={style.selectedRadioButton} />
+                      )}
+                    </View>
+                    <Text style={style.answerText}>
+                      {option.charAt(0).toUpperCase() + option.slice(1)}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              {values.medicalNeeds === "yes" && (
+                <>
+                  <TextInput
+                    style={[
+                      style.textInput,
+                      {
+                        borderColor:
+                          errors.medicalDetails && touched.medicalDetails
+                            ? "red"
+                            : "#b19172",
+                        marginTop: 10,
+                        maxHeight: 100,
+                      },
+                    ]}
+                    placeholder="Please provide details"
+                    onChangeText={handleChange("medicalDetails")}
+                    value={values.medicalDetails}
+                    multiline={true}
+                  />
+                  {touched.medicalDetails && errors.medicalDetails && (
+                    <Text style={style.requiredErrorText}>
+                      {errors.medicalDetails}
+                    </Text>
                   )}
-                </View>
-                <Text>
-                  {genderOption.charAt(0).toUpperCase() + genderOption.slice(1)}
+                </>
+              )}
+              {touched.medicalNeeds && errors.medicalNeeds && (
+                <Text style={style.requiredErrorText}>
+                  {errors.medicalNeeds}
                 </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-          {touched.gender && errors.gender && (
-            <Text style={{ color: "red" }}>{errors.gender}</Text>
-          )}
+              )}
+            </View>
 
-          <Text>Sterilised?</Text>
-          <View style={{ flexDirection: "row", marginVertical: 10 }}>
-            {["yes", "no"].map((option) => (
-              <TouchableOpacity
-                key={option}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginRight: 15,
-                }}
-                onPress={() => setFieldValue("sterilised", option)}
-              >
-                <View
-                  style={{
-                    height: 20,
-                    width: 20,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginRight: 5,
-                  }}
-                >
-                  {values.sterilised === option && (
-                    <View
-                      style={{
-                        height: 10,
-                        width: 10,
-                        borderRadius: 5,
-                        backgroundColor: "blue",
-                      }}
-                    />
+            <View style={style.questionSectionContainer}>
+              <Text>Does your pet have special dietary requirements?</Text>
+              <View style={style.questionOptionsContainer}>
+                {["yes", "no"].map((option) => (
+                  <TouchableOpacity
+                    key={option}
+                    style={style.optionSpecificContainer}
+                    onPress={() => setFieldValue("dietaryNeeds", option)}
+                  >
+                    <View style={style.radioButton}>
+                      {values.dietaryNeeds === option && (
+                        <View style={style.selectedRadioButton} />
+                      )}
+                    </View>
+                    <Text style={style.answerText}>
+                      {option.charAt(0).toUpperCase() + option.slice(1)}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+              {values.dietaryNeeds === "yes" && (
+                <>
+                  <TextInput
+                    style={[
+                      style.textInput,
+                      {
+                        borderColor:
+                          errors.dietaryDetails && touched.dietaryDetails
+                            ? "red"
+                            : "#b19172",
+                        marginTop: 10,
+                        maxHeight: 100,
+                      },
+                    ]}
+                    placeholder="Please provide details"
+                    onChangeText={handleChange("dietaryDetails")}
+                    value={values.dietaryDetails}
+                    multiline={true}
+                  />
+                  {touched.dietaryDetails && errors.dietaryDetails && (
+                    <Text style={style.requiredErrorText}>
+                      {errors.dietaryDetails}
+                    </Text>
                   )}
-                </View>
-                <Text>{option.charAt(0).toUpperCase() + option.slice(1)}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-          {touched.sterilised && errors.sterilised && (
-            <Text style={{ color: "red" }}>{errors.sterilised}</Text>
-          )}
+                </>
+              )}
+              {touched.dietaryNeeds && errors.dietaryNeeds && (
+                <Text style={style.requiredErrorText}>
+                  {errors.dietaryNeeds}
+                </Text>
+              )}
+            </View>
 
-          <Text>Vaccinated?</Text>
-          <View style={{ flexDirection: "row", marginVertical: 10 }}>
-            {["yes", "no"].map((option) => (
-              <TouchableOpacity
-                key={option}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginRight: 15,
-                }}
-                onPress={() => setFieldValue("vaccinated", option)}
-              >
-                <View
-                  style={{
-                    height: 20,
-                    width: 20,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginRight: 5,
-                  }}
-                >
-                  {values.vaccinated === option && (
-                    <View
-                      style={{
-                        height: 10,
-                        width: 10,
-                        borderRadius: 5,
-                        backgroundColor: "green",
-                      }}
-                    />
-                  )}
-                </View>
-                <Text>{option.charAt(0).toUpperCase() + option.slice(1)}</Text>
-              </TouchableOpacity>
-            ))}
+            <TouchableOpacity
+              onPress={() => handleSubmit()}
+              style={style.submitButton}
+            >
+              <Text style={style.submitButtonText}>Submit</Text>
+            </TouchableOpacity>
           </View>
-          {touched.vaccinated && errors.vaccinated && (
-            <Text style={{ color: "red" }}>{errors.vaccinated}</Text>
-          )}
-
-          <Text>Medical Needs?</Text>
-          <View style={{ flexDirection: "row", marginVertical: 10 }}>
-            {["yes", "no"].map((option) => (
-              <TouchableOpacity
-                key={option}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginRight: 15,
-                }}
-                onPress={() => setFieldValue("medicalNeeds", option)}
-              >
-                <View
-                  style={{
-                    height: 20,
-                    width: 20,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginRight: 5,
-                  }}
-                >
-                  {values.medicalNeeds === option && (
-                    <View
-                      style={{
-                        height: 10,
-                        width: 10,
-                        borderRadius: 5,
-                        backgroundColor: "blue",
-                      }}
-                    />
-                  )}
-                </View>
-                <Text>{option.charAt(0).toUpperCase() + option.slice(1)}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-          {values.medicalNeeds === "yes" && (
-            <TextInput
-              style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
-              placeholder="Please provide details"
-              onChangeText={handleChange("medicalDetails")}
-              value={values.medicalDetails}
-            />
-          )}
-          {touched.medicalNeeds && errors.medicalNeeds && (
-            <Text style={{ color: "red" }}>{errors.medicalNeeds}</Text>
-          )}
-
-          <Text>Dietary Needs?</Text>
-          <View style={{ flexDirection: "row", marginVertical: 10 }}>
-            {["yes", "no"].map((option) => (
-              <TouchableOpacity
-                key={option}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginRight: 15,
-                }}
-                onPress={() => setFieldValue("dietaryNeeds", option)}
-              >
-                <View
-                  style={{
-                    height: 20,
-                    width: 20,
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    marginRight: 5,
-                  }}
-                >
-                  {values.dietaryNeeds === option && (
-                    <View
-                      style={{
-                        height: 10,
-                        width: 10,
-                        borderRadius: 5,
-                        backgroundColor: "orange",
-                      }}
-                    />
-                  )}
-                </View>
-                <Text>{option.charAt(0).toUpperCase() + option.slice(1)}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-          {values.dietaryNeeds === "yes" && (
-            <TextInput
-              style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
-              placeholder="Please provide details"
-              onChangeText={handleChange("dietaryDetails")}
-              value={values.dietaryDetails}
-            />
-          )}
-          {
-          touched.dietaryNeeds && errors.dietaryNeeds && (
-            <Text style={{ color: "red" }}>{errors.dietaryNeeds}</Text>
-          )}
-
-          <TouchableOpacity
-            onPress={() => handleSubmit}
-            style={{ backgroundColor: "blue", padding: 10 }}
-          >
-            <Text style={{ color: "white", textAlign: "center" }}>Submit</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </Formik>
+        )}
+      </Formik>
+    </ScrollView>
   );
 };
 
