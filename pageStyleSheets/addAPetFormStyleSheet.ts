@@ -13,7 +13,12 @@ const style = StyleSheet.create({
   },
   formHeadingContainer: {
     marginBottom: 20,
-    padding: 10
+    padding: 20,
+    backgroundColor: "#F0F8FA",
+    marginTop: -20,
+    marginHorizontal: -20,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
   formHeadingText: {
     textAlign: "center",
@@ -41,10 +46,11 @@ const style = StyleSheet.create({
     marginBottom: 10,
   },
   petBreedFilteredList: {
-    borderWidth: 1,
+    borderWidth: 0.5,
     padding: 10,
-    marginTop: -20,
-    marginBottom: 15,
+    marginTop: -10,
+    marginBottom: 10,
+    borderRadius: 5,
   },
   questionOptionsContainer: {
     gap: 5
@@ -95,6 +101,10 @@ const style = StyleSheet.create({
   answerText: {
     fontWeight: 300
   },
+  questionAndTooltipContainer: {
+    flexDirection: "row", gap: 5 
+  }
+  
 });
 
 export default style;

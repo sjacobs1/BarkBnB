@@ -3,7 +3,6 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  FlatList,
   ScrollView,
 } from "react-native";
 import style from "../pageStyleSheets/addAPetFormStyleSheet";
@@ -12,7 +11,8 @@ import * as Yup from "yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
 import BREEDS from "../utils/dogBreedsList";
-import { SegmentedButtons } from "react-native-paper";
+import { SegmentedButtons, } from "react-native-paper";
+import FormTooltip from "../components/user/profileScreenComponents/petProfile/formTooltip";
 
 const AddAPet = () => {
   const [filteredBreeds, setFilteredBreeds] = useState(BREEDS);
@@ -67,6 +67,8 @@ const AddAPet = () => {
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => console.log(values)}
+        validateOnChange={true} // Ensures validation happens as the user types
+        validateOnBlur={true}
       >
         {({
           handleChange,
@@ -80,7 +82,7 @@ const AddAPet = () => {
           <View style={style.mainContainer}>
             <View style={style.formHeadingContainer}>
               <Text style={style.formHeadingText}>
-                We need a few details about your furry firend.{"\n"}
+                We need a few details about your furry friend.{"\n"}
                 Please enter your pet's information below !
               </Text>
             </View>
@@ -178,19 +180,29 @@ const AddAPet = () => {
                     value: "male",
                     label: "Male",
                     style: [
-                      values.gender === "male" ? { backgroundColor: "#b19172" } : {},
+                      values.gender === "male"
+                        ? { backgroundColor: "#b19172" }
+                        : {},
                       { borderRadius: 5 },
                     ],
-                    labelStyle: values.gender === "male" ? { color: "white" } : { color: "black" },
+                    labelStyle:
+                      values.gender === "male"
+                        ? { color: "white" }
+                        : { color: "black" },
                   },
                   {
                     value: "female",
                     label: "Female",
                     style: [
-                      values.gender === "female" ? { backgroundColor: "#b19172" } : {},
+                      values.gender === "female"
+                        ? { backgroundColor: "#b19172" }
+                        : {},
                       { borderRadius: 5 },
                     ],
-                    labelStyle: values.gender === "female" ? { color: "white" } : { color: "black" },
+                    labelStyle:
+                      values.gender === "female"
+                        ? { color: "white" }
+                        : { color: "black" },
                   },
                 ]}
                 style={{}}
@@ -201,7 +213,12 @@ const AddAPet = () => {
             </View>
 
             <View style={style.questionSectionContainer}>
-              <Text>Is your pet spayed or neutered?</Text>
+              <View style={style.questionAndTooltipContainer}>
+                <Text>Is your pet spayed or neutered?</Text>
+                <FormTooltip
+                  title="ovaries / testicles removed."
+                />
+              </View>
               <View style={style.questionOptionsContainer}>
                 {["yes", "no"].map((option) => (
                   <TouchableOpacity
@@ -226,7 +243,10 @@ const AddAPet = () => {
             </View>
 
             <View style={style.questionSectionContainer}>
-              <Text>Are your pet’s vaccinations up to date?</Text>
+              <View style={style.questionAndTooltipContainer}>
+                <Text>Are your pet’s vaccinations up to date?</Text>
+                <FormTooltip title="core vaccines (e.g., rabies, distemper)." />
+              </View>
               <View style={style.questionOptionsContainer}>
                 {["yes", "no"].map((option) => (
                   <TouchableOpacity
@@ -251,7 +271,10 @@ const AddAPet = () => {
             </View>
 
             <View style={style.questionSectionContainer}>
-              <Text>Does your pet have any medical conditions?</Text>
+              <View style={style.questionAndTooltipContainer}>
+                <Text>Does your pet have any medical conditions?</Text>
+                <FormTooltip title="chronic illnesses, allergies, etc." />
+              </View>
               <View style={style.questionOptionsContainer}>
                 {["yes", "no"].map((option) => (
                   <TouchableOpacity
@@ -284,10 +307,11 @@ const AddAPet = () => {
                         maxHeight: 100,
                       },
                     ]}
-                    placeholder="Please provide details"
+                    placeholder="Provide details like medical condition and medication taken"
                     onChangeText={handleChange("medicalDetails")}
                     value={values.medicalDetails}
                     multiline={true}
+                    maxLength={200}
                   />
                   {touched.medicalDetails && errors.medicalDetails && (
                     <Text style={style.requiredErrorText}>
@@ -304,7 +328,10 @@ const AddAPet = () => {
             </View>
 
             <View style={style.questionSectionContainer}>
-              <Text>Does your pet have special dietary requirements?</Text>
+              <View style={style.questionAndTooltipContainer}>
+                <Text>Does your pet have special dietary needs?</Text>
+                <FormTooltip title="allergies, intolerances, specific requirements." />
+              </View>
               <View style={style.questionOptionsContainer}>
                 {["yes", "no"].map((option) => (
                   <TouchableOpacity
@@ -337,10 +364,11 @@ const AddAPet = () => {
                         maxHeight: 100,
                       },
                     ]}
-                    placeholder="Please provide details"
+                    placeholder="Provide specific dietary requirements, allergies, etc."
                     onChangeText={handleChange("dietaryDetails")}
                     value={values.dietaryDetails}
                     multiline={true}
+                    maxLength={200}
                   />
                   {touched.dietaryDetails && errors.dietaryDetails && (
                     <Text style={style.requiredErrorText}>
