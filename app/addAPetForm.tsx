@@ -11,12 +11,17 @@ import * as Yup from "yup";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState } from "react";
 import BREEDS from "../utils/dogBreedsList";
-import { SegmentedButtons, } from "react-native-paper";
+import { SegmentedButtons } from "react-native-paper";
 import FormTooltip from "../components/user/profileScreenComponents/petProfile/formTooltip";
+import Fuse from "fuse.js";
 
 const AddAPet = () => {
   const [filteredBreeds, setFilteredBreeds] = useState(BREEDS);
   const [showDropdown, setShowDropdown] = useState(false);
+  const fuse = new Fuse(BREEDS, {
+    includeScore: true,
+    threshold: 0.7, 
+  });
 
   const validationSchema = Yup.object().shape({
     petName: Yup.string().required("Pet name is required"),
@@ -67,7 +72,7 @@ const AddAPet = () => {
         }}
         validationSchema={validationSchema}
         onSubmit={(values) => console.log(values)}
-        validateOnChange={true} // Ensures validation happens as the user types
+        validateOnChange={true} 
         validateOnBlur={true}
       >
         {({
@@ -141,11 +146,9 @@ const AddAPet = () => {
                 onChangeText={(text) => {
                   setFieldValue("breed", text);
                   if (text) {
-                    setFilteredBreeds(
-                      BREEDS.filter((b) =>
-                        b.toLowerCase().includes(text.toLowerCase())
-                      )
-                    );
+                    const results = fuse.search(text);
+                    const matched = results.map((result) => result.item);
+                    setFilteredBreeds(matched);
                     setShowDropdown(true);
                   } else {
                     setShowDropdown(false);
@@ -154,19 +157,20 @@ const AddAPet = () => {
               />
 
               {showDropdown && filteredBreeds.length > 0 && (
-                <TouchableOpacity
-                  onPress={() => {
-                    setFieldValue("breed", filteredBreeds[0]);
-                    setShowDropdown(false);
-                  }}
-                  style={style.petBreedFilteredList}
-                >
-                  <Text>{filteredBreeds[0]}</Text>
-                </TouchableOpacity>
-              )}
-
-              {touched.breed && errors.breed && (
-                <Text style={style.requiredErrorText}>{errors.breed}</Text>
+                <View style={style.petBreedFilteredList}>
+                  {filteredBreeds.map((breed, index) => (
+                    <TouchableOpacity
+                      key={index}
+                      onPress={() => {
+                        setFieldValue("breed", breed);
+                        setShowDropdown(false);
+                      }}
+                      style={style.dropdownItem} 
+                    >
+                      <Text>{breed}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
               )}
             </View>
 
@@ -215,9 +219,7 @@ const AddAPet = () => {
             <View style={style.questionSectionContainer}>
               <View style={style.questionAndTooltipContainer}>
                 <Text>Is your pet spayed or neutered?</Text>
-                <FormTooltip
-                  title="ovaries / testicles removed."
-                />
+                <FormTooltip title="ovaries / testicles removed." />
               </View>
               <View style={style.questionOptionsContainer}>
                 {["yes", "no"].map((option) => (

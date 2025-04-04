@@ -103,7 +103,14 @@ const style = StyleSheet.create({
   },
   questionAndTooltipContainer: {
     flexDirection: "row", gap: 5 
+  },
+  dropdownItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
   }
+  
   
 });
 
