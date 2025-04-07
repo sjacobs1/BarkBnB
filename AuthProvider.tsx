@@ -8,6 +8,7 @@ import {
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "./firebaseConfig";
 import { useUserStore } from "./hooks/UserStore";
+import * as SecureStore from "expo-secure-store";
 
 export type UserType = "user" | "admin" | null;
 
@@ -30,13 +31,35 @@ const ADMIN_UIDS = ["LlowqXkGoOPfY3mYGM0eVmWooDA3"];
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { setUser, clearUser } = useUserStore();
 
+  async function saveToken(idToken: string) {
+    await SecureStore.setItemAsync("idToken", idToken);
+  }
+
+  async function retrieveToken() {
+    const user = auth.currentUser;
+
+    if (!user) {
+      return null;
+    }
+
+    if (user) {
+      const idToken = await user.getIdToken(true);
+      await SecureStore.setItemAsync("idToken", idToken);
+      return idToken;
+    }
+  }
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         const userRef = doc(db, "users", currentUser.uid);
         const userSnapshot = await getDoc(userRef);
 
-        let role = "user";
+        const idToken = await retrieveToken();
+
+        console.log("Saved token:", idToken);
+
+        let role;
         if (ADMIN_UIDS.includes(currentUser.uid)) {
           role = "admin";
         } else if (userSnapshot.exists()) {
