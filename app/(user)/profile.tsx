@@ -8,9 +8,13 @@ import { formatCellphoneNumber } from "../../utils/formatCellphoneNumber";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import NoPetsAdded from "../../components/user/profileScreenComponents/petProfile/noPetsAdded";
 import { Link } from "expo-router";
-
+import { useGetPetsQuery } from "../services/pet/petSlice";
 
 const Profile = () => {
+  const { data: userPets = [], isLoading, isError } = useGetPetsQuery();
+  const pets = JSON.stringify(userPets);
+  console.log("Pets data:", pets);
+
   const userFirstName = useUserStore((state) => state.user?.firstName);
   const userEmailAddress = useUserStore((state) => state.user?.email);
   const userCellphoneNumber = useUserStore((state) => state.user?.cellNumber);
@@ -43,7 +47,19 @@ const Profile = () => {
           <NoPetsAdded />
         ) : (
           <>
-            <PetProfileCard
+            {userPets.map((pet) => (
+              <TouchableOpacity
+                key={pet.id}
+                onPress={() => console.log("Pet clicked")}
+              >
+                <PetProfileCard
+                  name={pet.name}
+                  image={pet.image}
+                  checkedIn={pet.checkedIn}
+                />
+              </TouchableOpacity>
+            ))}
+            {/* <PetProfileCard
               name={petName1}
               image={petImage}
               checkedIn={checkedIn}
@@ -52,7 +68,7 @@ const Profile = () => {
               name={petName}
               image={petImage}
               checkedIn={checkedIn}
-            />
+            /> */}
           </>
         )}
       </View>

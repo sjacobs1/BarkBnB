@@ -9,6 +9,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "./firebaseConfig";
 import { useUserStore } from "./hooks/UserStore";
 import * as SecureStore from "expo-secure-store";
+import { getLatestToken } from "./utils/tokenUtils";
 
 export type UserType = "user" | "admin" | null;
 
@@ -31,31 +32,13 @@ const ADMIN_UIDS = ["LlowqXkGoOPfY3mYGM0eVmWooDA3"];
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { setUser, clearUser } = useUserStore();
 
-  async function saveToken(idToken: string) {
-    await SecureStore.setItemAsync("idToken", idToken);
-  }
-
-  async function retrieveToken() {
-    const user = auth.currentUser;
-
-    if (!user) {
-      return null;
-    }
-
-    if (user) {
-      const idToken = await user.getIdToken(true);
-      await SecureStore.setItemAsync("idToken", idToken);
-      return idToken;
-    }
-  }
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         const userRef = doc(db, "users", currentUser.uid);
         const userSnapshot = await getDoc(userRef);
 
-        const idToken = await retrieveToken();
+        const idToken = await getLatestToken();
 
         console.log("Saved token:", idToken);
 

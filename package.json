@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@react-native-community/datetimepicker": "^8.3.0",
+    "@reduxjs/toolkit": "^2.6.1",
     "expo": "~52.0.28",
     "expo-constants": "~17.0.5",
     "expo-linking": "~7.0.5",
@@ -26,6 +27,7 @@
     "react-native-screens": "~4.4.0",
     "react-native-svg": "^15.11.2",
     "react-native-svg-transformer": "^1.5.0",
+    "react-redux": "^9.2.0",
     "yup": "^1.6.1",
     "zustand": "^5.0.3"
   },
