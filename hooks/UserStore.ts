@@ -45,6 +45,7 @@ export const useUserStore = create<UserStore>()(
         email: userData.email,
         role: userData.role,
       };
+      console.log("Fetched user:", user);
 
       set({ user });
       return get().user;

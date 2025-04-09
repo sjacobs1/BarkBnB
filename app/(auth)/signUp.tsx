@@ -16,9 +16,12 @@ import React from "react";
 // @ts-ignore
 import Logo from "../../assets/logo.svg";
 import style from "./authStyleSheet";
+import { useSignUp } from "../../hooks/useSignUp";
 
 const SignupScreen = () => {
-  const { signup } = useAuth();
+  console.log("SignupScreen rendered");
+  const { signUp } = useSignUp();
+  console.log("useSignUp hook called in SignupScreen"); // Debug log
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -56,7 +59,7 @@ const SignupScreen = () => {
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
           try {
-            await signup(
+            await signUp(
               values.firstName,
               values.lastName,
               values.cellNumber,
@@ -64,6 +67,7 @@ const SignupScreen = () => {
               values.password,
               "user"
             );
+
             Alert.alert("Success", "Account created! Please log in.");
             router.replace("/login");
           } catch (error: any) {

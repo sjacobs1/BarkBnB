@@ -3,24 +3,16 @@ import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
-  createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "./firebaseConfig";
 import { useUserStore } from "./hooks/UserStore";
+import { getLatestToken } from "./utils/tokenUtils";
 
 export type UserType = "user" | "admin" | null;
 
 interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
-  signup: (
-    firstName: string,
-    lastName: string,
-    cellNumber: string,
-    email: string,
-    password: string,
-    role: string
-  ) => Promise<void>;
   logout: () => Promise<void>;
 }
 
@@ -36,7 +28,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const userRef = doc(db, "users", currentUser.uid);
         const userSnapshot = await getDoc(userRef);
 
-        let role = "user";
+        const idToken = await getLatestToken();
+
+        console.log("Saved token:", idToken);
+
+        let role;
         if (ADMIN_UIDS.includes(currentUser.uid)) {
           role = "admin";
         } else if (userSnapshot.exists()) {
@@ -66,6 +62,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       password
     );
     const uid = userCredential.user.uid;
+    console.log("User ID:", uid);
 
     const userReference = doc(db, "users", uid);
     const userSnapshot = await getDoc(userReference);
@@ -87,42 +84,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
-  const signup = async (
-    firstName: string,
-    lastName: string,
-    cellNumber: string,
-    email: string,
-    password: string,
-    role: string
-  ) => {
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-    const uid = userCredential.user.uid;
-    const userRole = ADMIN_UIDS.includes(uid) ? "admin" : role;
-
-    const user = {
-      id: uid,
-      firstName,
-      lastName,
-      cellNumber,
-      email,
-      role: userRole,
-    };
-
-    await setDoc(doc(db, "users", uid), user);
-    clearUser();
-  };
-
   const logout = async () => {
     await signOut(auth);
     clearUser();
   };
 
   return (
-    <AuthContext.Provider value={{ login, signup, logout }}>
+    <AuthContext.Provider value={{ login, logout }}>
       {children}
     </AuthContext.Provider>
   );
