@@ -8,6 +8,7 @@ export const petsApi = createApi({
     baseUrl: "http://localhost:3000/api",
     prepareHeaders: async (headers) => {
       const token = await getLatestToken();
+      console.log("Token:", token);
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
       }

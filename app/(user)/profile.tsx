@@ -55,7 +55,7 @@ const Profile = () => {
                 <PetProfileCard
                   name={pet.name}
                   image={pet.image}
-                  checkedIn={pet.checkedIn}
+                  checkedIn={checkedIn}
                 />
               </TouchableOpacity>
             ))}
