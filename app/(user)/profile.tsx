@@ -16,8 +16,12 @@ const Profile = () => {
   const userEmailAddress = useUserStore((state) => state.user?.email);
   const userCellphoneNumber = useUserStore((state) => state.user?.cellNumber);
   const pets = usePetStore((state) => state.pets);
-  const { data: fetchedPets, isLoading, error } = useGetPetsQuery();
+  const { data: fetchedPets, refetch, isLoading, error } = useGetPetsQuery();
   const setPets = usePetStore((state) => state.setPets);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   useEffect(() => {
     if (fetchedPets) {

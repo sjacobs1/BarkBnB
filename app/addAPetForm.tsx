@@ -17,6 +17,8 @@ import Fuse from "fuse.js";
 import { useAddPetMutation } from "../app/services/pet/petSlice";
 import { auth } from "../firebaseConfig";
 import { usePetStore } from "../hooks/petStore";
+import { useRouter } from "expo-router";
+import { Alert } from "react-native";
 
 const AddAPet = () => {
   const [filteredBreeds, setFilteredBreeds] = useState(BREEDS);
@@ -28,6 +30,7 @@ const AddAPet = () => {
   const user_uid = auth.currentUser?.uid;
   const [addPet] = useAddPetMutation();
   const addPetToStore = usePetStore((state) => state.addPet);
+  const router = useRouter();
 
   const validationSchema = Yup.object().shape({
     petName: Yup.string().required("Pet name is required"),
@@ -74,7 +77,18 @@ const AddAPet = () => {
 
       await addPet(petData).unwrap();
       addPetToStore(petData);
-      alert("Pet added successfully!");
+      
+
+      Alert.alert(
+        "Pet added successfully!",
+        "",
+        [
+          {
+            text: "OK",
+            onPress: () => router.replace("/(user)/profile"),
+          },
+        ]
+      );
     } catch (error) {
       console.error("Failed to add pet:", error);
       alert("Failed to add pet. Please try again.");
