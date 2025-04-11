@@ -39,11 +39,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           role = userSnapshot.data()?.role || "user";
         }
 
+        const userData = userSnapshot.data();
         setUser({
           id: currentUser.uid,
-          firstName: currentUser.displayName || "",
-          lastName: "",
-          cellNumber: "",
+          firstName: userData?.firstName || "",
+          lastName: userData?.lastName || "",
+          cellNumber: userData?.cellNumber || "",
           email: currentUser.email || "",
           role,
         });
@@ -74,11 +75,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       role = userSnapshot.data()?.role || "user";
     }
 
+    const userData = userSnapshot.data();
     setUser({
       id: uid,
-      firstName: userSnapshot.data()?.firstName,
-      lastName: userSnapshot.data()?.lastName,
-      cellNumber: userSnapshot.data()?.cellNumber,
+      firstName: userData?.firstName || "",
+      lastName: userData?.lastName || "",
+      cellNumber: userData?.cellNumber || "",
       email: userCredential.user.email || "",
       role,
     });

@@ -17,13 +17,15 @@ import React from "react";
 import Logo from "../../assets/logo.svg";
 import style from "./authStyleSheet";
 import { useSignUp } from "../../hooks/useSignUp";
+import { useUserStore } from "../../hooks/UserStore";
 
 const SignupScreen = () => {
   console.log("SignupScreen rendered");
   const { signUp } = useSignUp();
-  console.log("useSignUp hook called in SignupScreen"); // Debug log
+  console.log("useSignUp hook called in SignupScreen");
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const setUser = useUserStore((state) => state.setUser);
 
   const validationSchema = Yup.object({
     firstName: Yup.string().required("Required"),
@@ -59,7 +61,7 @@ const SignupScreen = () => {
         validationSchema={validationSchema}
         onSubmit={async (values, { setSubmitting }) => {
           try {
-            await signUp(
+            const user = await signUp(
               values.firstName,
               values.lastName,
               values.cellNumber,
@@ -67,6 +69,15 @@ const SignupScreen = () => {
               values.password,
               "user"
             );
+
+            setUser({
+              id: user.user?.uid,
+              firstName: values.firstName,
+              lastName: values.lastName,
+              cellNumber: values.cellNumber,
+              email: values.email,
+              role: "user",
+            });
 
             Alert.alert("Success", "Account created! Please log in.");
             router.replace("/login");
