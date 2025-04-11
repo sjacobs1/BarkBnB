@@ -14,6 +14,9 @@ import BREEDS from "../utils/dogBreedsList";
 import { SegmentedButtons } from "react-native-paper";
 import FormTooltip from "../components/user/profileScreenComponents/petProfile/formTooltip";
 import Fuse from "fuse.js";
+import { useAddPetMutation } from "../app/services/pet/petSlice"; // Import the mutation
+import { auth } from "../firebaseConfig";
+
 
 const AddAPet = () => {
   const [filteredBreeds, setFilteredBreeds] = useState(BREEDS);
@@ -22,6 +25,9 @@ const AddAPet = () => {
     includeScore: true,
     threshold: 0.7, 
   });
+  
+  const user_uid = auth.currentUser?.uid;
+  const [addPet] = useAddPetMutation(); // Use the mutation
 
   const validationSchema = Yup.object().shape({
     petName: Yup.string().required("Pet name is required"),
@@ -52,6 +58,33 @@ const AddAPet = () => {
     }),
   });
 
+  const handleSubmit = async (values: any) => {
+    try {
+      const petData = {
+        user_uid: user_uid || "", 
+        name: values.petName,
+        breed: values.breed,
+        dietary_requirements: values.dietaryNeeds || "",
+        medical_requirements: values.medicalNeeds || "",
+        gender: values.gender,
+        birthdate: values.birthDate,
+        vaccine_status: values.vaccinated,
+        neutered: values.sterilised === "yes",
+      };
+
+      console.log("Final pet data being sent:", JSON.stringify(petData, null, 2));
+
+      console.log("user_uid:",user_uid)
+
+
+      await addPet(petData).unwrap(); // Post the pet data
+      alert("Pet added successfully!");
+    } catch (error) {
+      console.error("Failed to add pet:", error);
+      alert("Failed to add pet. Please try again.");
+    }
+  };
+
   return (
     <ScrollView
       automaticallyAdjustKeyboardInsets={true}
@@ -71,7 +104,7 @@ const AddAPet = () => {
           dietaryDetails: "",
         }}
         validationSchema={validationSchema}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={handleSubmit} // Use the handleSubmit function
         validateOnChange={true} 
         validateOnBlur={true}
       >

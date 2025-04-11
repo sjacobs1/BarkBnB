@@ -26,7 +26,7 @@ const Profile = () => {
   const petName1 = "Roman";
   const petName = "Bailey";
   const petImage = "https://example.com/path/to/pet/image.jpg";
-  const checkedIn = true;
+  const checkedIn = false;
 
   return (
     <ScrollView style={style.mainContainer}>

@@ -1,5 +1,5 @@
 export interface Pet {
-  id: number;
+  id?: number;
   user_uid: string;
   name: string;
   breed: string;
@@ -7,7 +7,7 @@ export interface Pet {
   dietary_requirements?: string; // Optional field
   medical_requirements?: string; // Optional field
   gender: string;
-  birthdate: string; // Use `Date` if you want to handle it as a Date object
+  birthdate: Date; // Use `Date` if you want to handle it as a Date object
   vaccine_status: string;
   neutered: boolean;
 }
