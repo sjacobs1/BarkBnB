@@ -52,11 +52,7 @@ const Profile = () => {
               key={pet.name}
               onPress={() => console.log("Pet clicked")}
             >
-              <PetProfileCard
-                name={pet.name}
-                image={pet.image}
-                checkedIn={false}
-              />
+              <PetProfileCard key={pet.name} pet={pet} />
             </TouchableOpacity>
           ))
         )}
