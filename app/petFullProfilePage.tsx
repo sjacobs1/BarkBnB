@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import { usePetStore } from "../hooks/petStore";
 import { getAge } from "../utils/getPetAge";
 import s from "../pageStyleSheets/petFullProfilePageStyleSheet";
+import RowCell from "../components/user/profileScreenComponents/petProfile/petFullProfile/rowCell";
+import RequirementRow from "../components/user/profileScreenComponents/petProfile/petFullProfile/requirementRow";
 
 const PetFullProfilePage = () => {
   const selectedPet = usePetStore((state) => state.selectedPet);
-  const [requirementsExpanded, setRequirementsExpanded] = useState(false);
 
   if (!selectedPet) {
     return (
@@ -33,62 +34,6 @@ const PetFullProfilePage = () => {
       value: selectedPet.neutered ? "yes" : "no",
     },
   ];
-
-  const RowCell = ({
-    label,
-    value,
-  }: {
-    label: string;
-    value: string;
-  }) => (
-    <View style={s.rowCell}>
-      <Text>{label}</Text>
-      <Text>{value}</Text>
-    </View>
-  );
-
-  const RequirementRow = ({
-    label,
-    value,
-    showDivider
-  }: {
-    label: string;
-    value: string;
-    showDivider: boolean;
-  }) => {
-    const [expanded, setExpanded] = useState(false);
-    const isExpandable = value?.toLowerCase() !== "no";
-
-    return (
-      <View style={[s.rowCell, { flexDirection: "column" }, !showDivider && { borderBottomWidth: 0 }]}>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
-          <Text>{label}</Text>
-          {isExpandable ? (
-            <Text
-              style={{ color: "#1c7fff" }}
-              onPress={() => setExpanded((prev) => !prev)}
-            >
-              {expanded ? "Hide details ▲" : "View details ▼"}
-            </Text>
-          ) : (
-            <Text>no</Text>
-          )}
-        </View>
-
-        {expanded && isExpandable && (
-          <View style={s.dropdownBox}>
-            <Text>{value}</Text>
-          </View>
-        )}
-      </View>
-    );
-  };
 
   return (
     <ScrollView style={s.page}>
