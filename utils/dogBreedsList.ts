@@ -39,7 +39,8 @@ const BREEDS = [
   "Greyhound",
   "Akita",
   "Alaskan Malamute",
-  "Whippet"
+  "Whippet",
+  "Boerboel",
 ];
 
 export default BREEDS;

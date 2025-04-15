@@ -147,6 +147,7 @@ const AddAPet = () => {
                 placeholder="Your pet's name"
                 onChangeText={handleChange("petName")}
                 onBlur={handleBlur("petName")}
+                autoCapitalize="words"
                 value={values.petName}
               />
               {touched.petName && errors.petName && (
