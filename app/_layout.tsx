@@ -12,6 +12,8 @@ const RootLayout = () => {
           <Stack screenOptions={{ headerShown: false }}>
             {/* Tabs Layout for Home & Profile */}
             <Stack.Screen name="(user)" />
+            {/* Tabs Layout for Admin Home & Service Offerings */}
+            <Stack.Screen name="(admin)" />
 
             {/* Add a Pet Page - Stack Navigation with Header */}
             <Stack.Screen

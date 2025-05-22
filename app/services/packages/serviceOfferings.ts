@@ -3,7 +3,7 @@ import { ServiceOffering } from "../../models/serviceOffering";
 import { getLatestToken } from "../../../utils/tokenUtils";
 
 export const serviceOfferingsApi = createApi({
-  reducerPath: "api",
+  reducerPath: "serviceOfferingsApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:3000/api",
     prepareHeaders: async (headers) => {
