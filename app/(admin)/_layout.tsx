@@ -21,8 +21,8 @@ export default function AdminTabsLayout() {
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
               name="dog-service"
-              size={24}
-              color="black"
+              size={size}
+              color={color}
             />
           ),
         }}
