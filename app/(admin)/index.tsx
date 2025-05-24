@@ -5,29 +5,11 @@ import { useUserStore } from "../../hooks/UserStore";
 import { useServicesStore } from "../../hooks/serviceStore";
 import { useGetServiceOfferingsQuery } from "../services/packages/serviceOfferings";
 import { useEffect } from "react";
+import ServiceOfferingCard from "../../components/admin/serviceOfferingCard";
 
 const AdminHome = () => {
   const { logout } = useAuth();
   const { user } = useUserStore();
-  const services = useServicesStore((state) => state.serviceOfferings);
-  const {
-    data: fetchedServices,
-    refetch,
-    isLoading,
-    error,
-  } = useGetServiceOfferingsQuery();
-  console.log("Fetched Services:", fetchedServices);
-  const setServices = useServicesStore((state) => state.setServices);
-
-  useEffect(() => {
-    refetch();
-  }, []);
-
-  useEffect(() => {
-    if (fetchedServices) {
-      setServices(fetchedServices);
-    }
-  }, [fetchedServices]);
 
   console.log("User:", user);
   const router = useRouter();
@@ -45,22 +27,6 @@ const AdminHome = () => {
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Text>Admin Home Page</Text>
       <Button title="Logout" onPress={userSignOut} />
-      <View>
-        <Text>Service Offerings:</Text>
-        {isLoading ? (
-          <Text>Loading...</Text>
-        ) : error ? (
-          <Text>Error fetching services</Text>
-        ) : (
-          services.map((service) => (
-            <View key={service.name}>
-              <Text>{service.name}</Text>
-              <Text>{service.description}</Text>
-              <Text>{service.price}</Text>
-            </View>
-          ))
-        )}
-      </View>
     </View>
   );
 };
