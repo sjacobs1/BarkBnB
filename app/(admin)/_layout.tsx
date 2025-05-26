@@ -8,7 +8,7 @@ export default function AdminTabsLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Admin Home",
+          title: "Home",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home-outline" size={size} color={color} />
           ),
@@ -17,7 +17,7 @@ export default function AdminTabsLayout() {
       <Tabs.Screen
         name="serviceOfferings"
         options={{
-          title: "Service Offerings",
+          title: "Services",
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
               name="dog-service"

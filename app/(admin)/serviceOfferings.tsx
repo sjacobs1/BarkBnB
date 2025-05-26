@@ -1,9 +1,11 @@
-import { View, Text } from "react-native";
+import { View, Text, Touchable, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
 import { useServicesStore } from "../../hooks/serviceStore";
 import { useGetServiceOfferingsQuery } from "../services/packages/serviceOfferings";
 import ServiceOfferingCard from "../../components/admin/serviceOfferingCard";
 import style from "../../pageStyleSheets/serviceOfferingsStylesheet";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Link } from "expo-router";
 
 const Services = () => {
   const services = useServicesStore((state) => state.serviceOfferings);
@@ -25,6 +27,7 @@ const Services = () => {
       setServices(fetchedServices);
     }
   }, [fetchedServices]);
+
   return (
     <View style={style.mainContainer}>
       {isLoading ? (
@@ -36,6 +39,12 @@ const Services = () => {
           <ServiceOfferingCard key={service.name} service={service} />
         ))
       )}
+
+      <TouchableOpacity style={style.addServiceButton} onPress={() => {}}>
+        <Link href="/addAServiceForm">
+          <Ionicons name="add-outline" size={36} color="#FFA025" />
+        </Link>
+      </TouchableOpacity>
     </View>
   );
 };

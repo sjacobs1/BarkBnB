@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import { useServicesStore } from "../../hooks/serviceStore";
 import style from "./serviceOfferingsCardStyleSheet";
+import { Divider } from "react-native-paper";
 
 interface ServiceOfferingCardProps {
   service: {
@@ -17,28 +18,41 @@ const ServiceOfferingCard = ({ service }: ServiceOfferingCardProps) => {
     setSelectedService(service);
   };
   const maxLines = 3;
+  const maxLength = 150;
 
   const [expanded, setExpanded] = useState(false);
   const toggleExpanded = () => {
     setExpanded(!expanded);
   };
 
+  const shouldShowReadMore =
+    service.description && service.description.length > maxLength;
+
   return (
     <View style={style.mainContainer}>
-      <Text>{service.name}</Text>
-      <Text
-        numberOfLines={expanded ? undefined : maxLines}
-        ellipsizeMode="tail"
-      >
-        {service.description}{" "}
-        <TouchableOpacity onPress={toggleExpanded}>
-          {" "}
-          <Text style={style.readMoreButton}>
-            {expanded ? "Read less" : "Read more"}
-          </Text>
-        </TouchableOpacity>
-      </Text>
-      <Text>{service.price}</Text>
+      <View style={style.headerContainer}>
+        <Text style={style.serviceName}>{service.name}</Text>
+        <Text style={style.servicePrice}>{`R${service.price}`}</Text>
+      </View>
+
+      <Divider style={style.divider} />
+      <View style={style.descriptionCntainer}>
+        <Text
+          numberOfLines={expanded ? undefined : maxLines}
+          ellipsizeMode="tail"
+        >
+          {service.description}{" "}
+        </Text>
+        {shouldShowReadMore ? (
+          <TouchableOpacity onPress={toggleExpanded}>
+            <Text style={style.readMoreButton}>
+              {expanded ? "Read less" : "Read more"}
+            </Text>
+          </TouchableOpacity>
+        ) : (
+          <View style={{ height: 20 }} />
+        )}
+      </View>
     </View>
   );
 };
