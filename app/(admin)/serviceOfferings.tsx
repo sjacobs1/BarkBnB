@@ -1,7 +1,7 @@
 import { View, Text, Touchable, TouchableOpacity } from "react-native";
 import React, { useEffect } from "react";
 import { useServicesStore } from "../../hooks/serviceStore";
-import { useGetServiceOfferingsQuery } from "../services/packages/serviceOfferings";
+import { useGetServiceOfferingsQuery } from "../services/packages/serviceOfferingsSlice";
 import ServiceOfferingCard from "../../components/admin/serviceOfferingCard";
 import style from "../../pageStyleSheets/serviceOfferingsStylesheet";
 import Ionicons from "@expo/vector-icons/Ionicons";

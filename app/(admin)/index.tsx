@@ -3,7 +3,7 @@ import { useAuth } from "../../AuthProvider";
 import { useRouter } from "expo-router";
 import { useUserStore } from "../../hooks/UserStore";
 import { useServicesStore } from "../../hooks/serviceStore";
-import { useGetServiceOfferingsQuery } from "../services/packages/serviceOfferings";
+import { useGetServiceOfferingsQuery } from "../services/packages/serviceOfferingsSlice";
 import { useEffect } from "react";
 import ServiceOfferingCard from "../../components/admin/serviceOfferingCard";
 

@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { petsApi } from "../services/pet/petSlice";
 import { userApi } from "../services/user/userSlice";
-import { serviceOfferingsApi } from "../services/packages/serviceOfferings";
+import { serviceOfferingsApi } from "../services/packages/serviceOfferingsSlice";
 
 export const store = configureStore({
   reducer: {
