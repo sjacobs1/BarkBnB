@@ -67,8 +67,10 @@ const AddAPet = () => {
         user_uid: user_uid || "",
         name: values.petName,
         breed: values.breed,
-        dietary_requirements: values.dietaryNeeds === "no" ? "no" : values.dietaryDetails || "",
-        medical_requirements: values.medicalNeeds === "no" ? "no" : values.medicalDetails || "",
+        dietary_requirements:
+          values.dietaryNeeds === "no" ? "no" : values.dietaryDetails || "",
+        medical_requirements:
+          values.medicalNeeds === "no" ? "no" : values.medicalDetails || "",
         gender: values.gender,
         birthdate: values.birthDate,
         vaccine_status: values.vaccinated,
@@ -77,18 +79,14 @@ const AddAPet = () => {
 
       await addPet(petData).unwrap();
       addPetToStore(petData);
-      
 
-      Alert.alert(
-        "Pet added successfully!",
-        "",
-        [
-          {
-            text: "OK",
-            onPress: () => router.replace("/(user)/profile"),
-          },
-        ]
-      );
+      Alert.alert("Pet added successfully!", "", [
+        {
+          text: "OK",
+          onPress: () => router.replace("/(user)/profile"),
+        },
+      ]);
+      9;
     } catch (error) {
       console.error("Failed to add pet:", error);
       alert("Failed to add pet. Please try again.");
@@ -114,7 +112,7 @@ const AddAPet = () => {
           dietaryDetails: "",
         }}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit} 
+        onSubmit={handleSubmit}
         validateOnChange={true}
         validateOnBlur={true}
       >

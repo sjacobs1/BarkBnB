@@ -19,7 +19,7 @@ const RootLayout = () => {
             <Stack.Screen
               name="addAPetForm"
               options={{
-                title: "Add A Pet",
+                title: "",
                 headerBackTitle: "My Profile",
                 headerShown: true,
               }}
@@ -27,8 +27,16 @@ const RootLayout = () => {
             <Stack.Screen
               name="petFullProfilePage"
               options={{
-                title: "Pet Profile",
+                title: "",
                 headerBackTitle: "My Profile",
+                headerShown: true,
+              }}
+            />
+            <Stack.Screen
+              name="addAServiceForm"
+              options={{
+                title: "",
+                headerBackTitle: "Service Offerings",
                 headerShown: true,
               }}
             />

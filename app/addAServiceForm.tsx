@@ -120,7 +120,7 @@ const AddAService = () => {
                 onChangeText={handleChange("description")}
                 onBlur={handleBlur("description")}
                 value={values.description}
-                multiline
+                multiline={true}
               />
               {errors.description && touched.description && (
                 <Text style={style.requiredErrorText}>
