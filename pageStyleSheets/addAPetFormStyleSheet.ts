@@ -9,7 +9,7 @@ const style = StyleSheet.create({
     padding: 20,
     backgroundColor: "white",
     borderRadius: 10,
-    marginBottom: 40
+    marginBottom: 40,
   },
   formHeadingContainer: {
     marginBottom: 20,
@@ -22,11 +22,11 @@ const style = StyleSheet.create({
   },
   formHeadingText: {
     textAlign: "center",
-    fontWeight: 500
+    fontWeight: 500,
   },
   questionSectionContainer: {
     marginBottom: 25,
-    gap: 10
+    gap: 10,
   },
   textInput: {
     width: "100%",
@@ -53,7 +53,7 @@ const style = StyleSheet.create({
     borderRadius: 5,
   },
   questionOptionsContainer: {
-    gap: 5
+    gap: 5,
   },
   sterilisedAndVaccinatedContainer: {
     flexDirection: "row",
@@ -99,19 +99,18 @@ const style = StyleSheet.create({
     fontWeight: "bold",
   },
   answerText: {
-    fontWeight: 300
+    fontWeight: 300,
   },
   questionAndTooltipContainer: {
-    flexDirection: "row", gap: 5 
+    flexDirection: "row",
+    gap: 5,
   },
   dropdownItem: {
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
-  }
-  
-  
+  },
 });
 
 export default style;

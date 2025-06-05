@@ -2,10 +2,15 @@ import { View, Text, Button } from "react-native";
 import { useAuth } from "../../AuthProvider";
 import { useRouter } from "expo-router";
 import { useUserStore } from "../../hooks/UserStore";
+import { useServicesStore } from "../../hooks/serviceStore";
+import { useGetServiceOfferingsQuery } from "../services/packages/serviceOfferingsSlice";
+import { useEffect } from "react";
+import ServiceOfferingCard from "../../components/admin/serviceOfferingCard";
 
 const AdminHome = () => {
   const { logout } = useAuth();
   const { user } = useUserStore();
+
   console.log("User:", user);
   const router = useRouter();
 

@@ -12,12 +12,14 @@ const RootLayout = () => {
           <Stack screenOptions={{ headerShown: false }}>
             {/* Tabs Layout for Home & Profile */}
             <Stack.Screen name="(user)" />
+            {/* Tabs Layout for Admin Home & Service Offerings */}
+            <Stack.Screen name="(admin)" />
 
             {/* Add a Pet Page - Stack Navigation with Header */}
             <Stack.Screen
               name="addAPetForm"
               options={{
-                title: "Add A Pet",
+                title: "",
                 headerBackTitle: "My Profile",
                 headerShown: true,
               }}
@@ -25,8 +27,16 @@ const RootLayout = () => {
             <Stack.Screen
               name="petFullProfilePage"
               options={{
-                title: "Pet Profile",
+                title: "",
                 headerBackTitle: "My Profile",
+                headerShown: true,
+              }}
+            />
+            <Stack.Screen
+              name="addAServiceForm"
+              options={{
+                title: "",
+                headerBackTitle: "Service Offerings",
                 headerShown: true,
               }}
             />
