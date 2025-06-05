@@ -98,6 +98,8 @@ const AddAService = () => {
                 onBlur={handleBlur("name")}
                 autoCapitalize="words"
                 value={values.name}
+                returnKeyType="next"
+                submitBehavior={"newline"}
               />
               {errors.name && touched.name && (
                 <Text style={style.requiredErrorText}>{errors.name}</Text>
@@ -139,7 +141,7 @@ const AddAService = () => {
                       errors.price && touched.price ? "red" : "#b19172",
                   },
                 ]}
-                placeholder="Service package price"
+                placeholder="R"
                 onChangeText={handleChange("price")}
                 onBlur={handleBlur("price")}
                 value={values.price.toString()}

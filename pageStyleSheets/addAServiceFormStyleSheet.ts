@@ -10,6 +10,7 @@ const style = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     marginBottom: 40,
+    justifyContent: "space-between",
   },
   formHeadingContainer: {
     marginBottom: 20,
