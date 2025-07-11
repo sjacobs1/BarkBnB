@@ -5,8 +5,9 @@ import {
   ScrollView,
   Touchable,
   TouchableOpacity,
+  Image,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useAddServiceOfferingMutation } from "./services/packages/serviceOfferingsSlice";
 import { useServicesStore } from "../hooks/serviceStore";
 import { Formik } from "formik";
@@ -14,20 +15,27 @@ import * as Yup from "yup";
 import { router } from "expo-router";
 import style from "../pageStyleSheets/addAServiceFormStyleSheet";
 import { TextInput } from "react-native-paper";
+import * as ImagePicker from "expo-image-picker";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
 interface AddServiceFormValues {
   name: string;
   description: string;
   price: string;
+  serviceImage: string | null; // Assuming you want to handle image upload later
 }
 
 const AddAService = () => {
   const [addServiceOffering] = useAddServiceOfferingMutation();
   const addServiceToStore = useServicesStore((state) => state.addService);
 
+  const [imageUpload, setImageUpload] = useState<File | null>(null);
+
   const initialValues: AddServiceFormValues = {
     name: "",
     description: "",
     price: "",
+    serviceImage: null,
   };
 
   const validationSchema = Yup.object().shape({
@@ -36,16 +44,41 @@ const AddAService = () => {
     price: Yup.number()
       .required("Price is required")
       .positive("Price must be a positive number"),
+    serviceImage: Yup.string().nullable(),
   });
+
+  const pickImage = async (setFieldValue: any) => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images", "videos"],
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.canceled) {
+      const selectedImage = result.assets[0];
+      setFieldValue("serviceImage", selectedImage.uri);
+    }
+  };
 
   const handleSubmit = async (values: AddServiceFormValues) => {
     try {
+      let serviceImageUrl = null;
+      if (values.serviceImage) {
+        const response = await fetch(values.serviceImage);
+        const blob = await response.blob();
+        const storage = getStorage();
+        const storageRef = ref(storage, `serviceImages/${Date.now()}.jpg`);
+        await uploadBytes(storageRef, blob);
+        serviceImageUrl = await getDownloadURL(storageRef);
+      }
       const serviceOfferingData = {
         name: values.name,
         description: values.description,
         price: Number(values.price),
+        serviceImageUrl,
       };
 
+      console.log("Service Offering Data:", serviceOfferingData);
       await addServiceOffering(serviceOfferingData).unwrap();
       addServiceToStore(serviceOfferingData);
 
@@ -151,6 +184,16 @@ const AddAService = () => {
                 <Text style={style.requiredErrorText}>{errors.price}</Text>
               )}
             </View>
+
+            <TouchableOpacity onPress={() => pickImage(setFieldValue)}>
+              <Text>Select Image</Text>
+            </TouchableOpacity>
+            {values.serviceImage && (
+              <Image
+                source={{ uri: values.serviceImage }}
+                style={{ width: 100, height: 100 }}
+              />
+            )}
 
             <TouchableOpacity
               style={style.submitButton}

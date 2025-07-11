@@ -4,6 +4,7 @@ interface Service {
   name: string;
   description?: string;
   price?: number;
+  image_url?: string | null;
 }
 
 interface ServiceStore {
