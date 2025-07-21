@@ -1,4 +1,4 @@
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { useServicesStore } from "../../../hooks/serviceStore";
 import style from "./userServiceOfferingCardStyleSheet";
@@ -11,15 +11,15 @@ interface UserServiceOfferingCardProps {
     price?: number;
     image_url?: string | null;
   };
+  onPress?: () => void;
 }
 
-const UserServiceOfferingCard = ({ service }: UserServiceOfferingCardProps) => {
-  const { setSelectedService } = useServicesStore();
-  const handleSelectedService = () => {
-    setSelectedService(service);
-  };
+const UserServiceOfferingCard = ({
+  service,
+  onPress,
+}: UserServiceOfferingCardProps) => {
   return (
-    <View style={style.mainContainer}>
+    <TouchableOpacity style={style.mainContainer} onPress={onPress}>
       <View style={style.headerContainer}>
         <Image
           source={
@@ -31,8 +31,10 @@ const UserServiceOfferingCard = ({ service }: UserServiceOfferingCardProps) => {
         />
       </View>
       <Divider style={style.divider} />
-      <Text style={style.serviceName}>{service.name}</Text>
-    </View>
+      <Text style={style.serviceName} numberOfLines={1}>
+        {service.name}
+      </Text>
+    </TouchableOpacity>
   );
 };
 

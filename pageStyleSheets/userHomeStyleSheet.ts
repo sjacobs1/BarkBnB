@@ -8,9 +8,10 @@ const style = StyleSheet.create({
     gap: 10,
   },
   mainContainer: {
-    flex: 1,
+    flexWrap: "wrap",
+    flexDirection: "row",
+    justifyContent: "space-between",
     backgroundColor: "#EBEBEB",
-    padding: 10,
     gap: 10,
   },
   sectionHeader: {
