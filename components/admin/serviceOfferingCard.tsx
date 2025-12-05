@@ -33,8 +33,9 @@ const ServiceOfferingCard = ({ service }: ServiceOfferingCardProps) => {
     <View style={style.mainContainer}>
       <View style={style.headerContainer}>
         <Text style={style.serviceName}>{service.name}</Text>
-        <Feather name="more-vertical" size={24} color="black" />
-        {/* <Text style={style.servicePrice}>{`R${service.price}`}</Text> */}
+        <TouchableOpacity onPress={handleSelectedService}>
+          <Feather name="more-vertical" size={24} color="black" />
+        </TouchableOpacity>
       </View>
 
       <Divider style={style.divider} />

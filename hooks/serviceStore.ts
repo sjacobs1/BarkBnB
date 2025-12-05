@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 interface Service {
+  id?: string;
   name: string;
   description?: string;
   price?: number;
