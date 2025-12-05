@@ -12,12 +12,13 @@ import { usePetStore } from "../../hooks/petStore";
 import { useGetPetsQuery } from "../services/pet/petSlice";
 
 const Profile = () => {
-  const userFirstName = useUserStore((state) => state.user?.firstName);
-  const userEmailAddress = useUserStore((state) => state.user?.email);
-  const userCellphoneNumber = useUserStore((state) => state.user?.cellNumber);
-  const pets = usePetStore((state) => state.pets);
+  const { user } = useUserStore();
+  const userFirstName = user?.firstName;
+  const userEmailAddress = user?.email;
+  const userCellphoneNumber = user?.cellNumber;
+
   const { data: fetchedPets, refetch, isLoading, error } = useGetPetsQuery();
-  const setPets = usePetStore((state) => state.setPets);
+  const { pets, setPets } = usePetStore();
 
   useEffect(() => {
     refetch();
@@ -26,6 +27,7 @@ const Profile = () => {
   useEffect(() => {
     if (fetchedPets) {
       setPets(fetchedPets);
+      console.log("Fetched pets:", fetchedPets);
     }
   }, [fetchedPets]);
 

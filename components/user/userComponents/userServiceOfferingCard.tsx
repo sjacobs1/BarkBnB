@@ -1,5 +1,11 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import React, { useState } from "react";
 import { useServicesStore } from "../../../hooks/serviceStore";
 import style from "./userServiceOfferingCardStyleSheet";
 import { Divider } from "react-native-paper";
@@ -18,15 +24,27 @@ const UserServiceOfferingCard = ({
   service,
   onPress,
 }: UserServiceOfferingCardProps) => {
+  const [imageLoading, setImageLoading] = useState(true);
+
   return (
     <TouchableOpacity style={style.mainContainer} onPress={onPress}>
       <View style={style.headerContainer}>
+        {imageLoading && (
+          <ActivityIndicator
+            size="large"
+            color="#225560"
+            style={style.loadingIndicator}
+          />
+        )}
         <Image
           source={
             service.image_url
               ? { uri: service.image_url }
               : require("../../../assets/icon.png")
           }
+          onLoadStart={() => setImageLoading(true)}
+          onLoadEnd={() => setImageLoading(false)}
+          onError={() => setImageLoading(false)}
           style={style.servicePoster}
         />
       </View>

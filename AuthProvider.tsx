@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
@@ -19,7 +25,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const ADMIN_UIDS = ["LlowqXkGoOPfY3mYGM0eVmWooDA3"];
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { setUser, clearUser } = useUserStore();
 
   useEffect(() => {

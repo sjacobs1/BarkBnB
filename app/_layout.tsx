@@ -29,6 +29,14 @@ const RootLayout = () => {
                   }}
                 />
                 <Stack.Screen
+                  name="createBookingForm"
+                  options={{
+                    title: "",
+                    headerBackTitle: "Bookings",
+                    headerShown: true,
+                  }}
+                />
+                <Stack.Screen
                   name="petFullProfilePage"
                   options={{
                     title: "",

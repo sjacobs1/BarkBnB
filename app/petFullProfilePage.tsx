@@ -7,7 +7,7 @@ import RowCell from "../components/user/profileScreenComponents/petProfile/petFu
 import RequirementRow from "../components/user/profileScreenComponents/petProfile/petFullProfile/requirementRow";
 
 const PetFullProfilePage = () => {
-  const selectedPet = usePetStore((state) => state.selectedPet);
+  const { selectedPet } = usePetStore();
 
   if (!selectedPet) {
     return (
@@ -43,18 +43,13 @@ const PetFullProfilePage = () => {
           <Text style={s.petNameText}>{selectedPet.name}</Text>
         </View>
         {profileDetails.map((item, index) => (
-          <RowCell
-            key={index}
-            label={item.label}
-            value={item.value ?? ""}
-          />
+          <RowCell key={index} label={item.label} value={item.value ?? ""} />
         ))}
 
         <RequirementRow
           label="Dietary Requirements"
           value={selectedPet.dietary_requirements ?? ""}
           showDivider={true}
-          
         />
         <RequirementRow
           label="Medical Requirements"

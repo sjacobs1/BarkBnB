@@ -1,5 +1,7 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 export default function UserTabsLayout() {
@@ -9,9 +11,22 @@ export default function UserTabsLayout() {
         <Tabs.Screen
           name="index"
           options={{
-            title: "Home",
+            title: "Services",
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home-outline" size={size} color={color} />
+              <MaterialCommunityIcons
+                name="dog-service"
+                size={size}
+                color={color}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="booking"
+          options={{
+            title: "Bookings",
+            tabBarIcon: ({ color, size }) => (
+              <AntDesign name="calendar" size={size} color={color} />
             ),
           }}
         />
