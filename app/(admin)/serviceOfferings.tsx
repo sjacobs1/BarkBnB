@@ -60,6 +60,10 @@ const Services = () => {
             <Text>Loading...</Text>
           ) : error ? (
             <Text>Error fetching services</Text>
+          ) : services.length === 0 ? (
+            <View>
+              <Text>No Service Offerings Available</Text>
+            </View>
           ) : (
             services.map((service) => (
               <ServiceOfferingCard key={service.name} service={service} />

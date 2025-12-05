@@ -38,5 +38,10 @@ const style = StyleSheet.create({
     height: 1,
     backgroundColor: "#225560",
   },
+  loadingIndicator: {
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+  },
 });
 export default style;

@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useServicesStore } from "../../hooks/serviceStore";
 import style from "./serviceOfferingsCardStyleSheet";
 import { Divider } from "react-native-paper";
+import Feather from "@expo/vector-icons/Feather";
 
 interface ServiceOfferingCardProps {
   service: {
@@ -32,7 +33,8 @@ const ServiceOfferingCard = ({ service }: ServiceOfferingCardProps) => {
     <View style={style.mainContainer}>
       <View style={style.headerContainer}>
         <Text style={style.serviceName}>{service.name}</Text>
-        <Text style={style.servicePrice}>{`R${service.price}`}</Text>
+        <Feather name="more-vertical" size={24} color="black" />
+        {/* <Text style={style.servicePrice}>{`R${service.price}`}</Text> */}
       </View>
 
       <Divider style={style.divider} />

@@ -1,16 +1,5 @@
 import { create } from "zustand";
-
-interface Pet {
-  name: string;
-  image?: string;
-  breed?: string;
-  gender?: string;
-  birthdate?: Date;
-  vaccine_status?: string;
-  neutered?: boolean;
-  dietary_requirements?: string;
-  medical_requirements?: string;
-}
+import { Pet } from "../app/models/pet";
 
 interface PetStore {
   pets: Pet[];
@@ -18,6 +7,8 @@ interface PetStore {
   setPets: (pets: Pet[]) => void;
   selectedPet: Pet | null;
   setSelectedPet: (pet: Pet | null) => void;
+  selectedPets: Pet[];
+  setSelectedPets: (pets: Pet[]) => void;
 }
 
 export const usePetStore = create<PetStore>((set) => ({
@@ -26,4 +17,6 @@ export const usePetStore = create<PetStore>((set) => ({
   setPets: (pets: Pet[]) => set(() => ({ pets })),
   selectedPet: null,
   setSelectedPet: (pet) => set({ selectedPet: pet }),
+  selectedPets: [],
+  setSelectedPets: (pets) => set({ selectedPets: pets }),
 }));
