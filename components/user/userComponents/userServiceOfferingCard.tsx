@@ -9,14 +9,10 @@ import React, { useState } from "react";
 import { useServicesStore } from "../../../hooks/serviceStore";
 import style from "./userServiceOfferingCardStyleSheet";
 import { Divider } from "react-native-paper";
+import { ServiceOffering } from "../../../app/models/serviceOffering";
 
 interface UserServiceOfferingCardProps {
-  service: {
-    name: string;
-    description?: string;
-    price?: number;
-    image_url?: string | null;
-  };
+  service: ServiceOffering;
   onPress?: () => void;
 }
 

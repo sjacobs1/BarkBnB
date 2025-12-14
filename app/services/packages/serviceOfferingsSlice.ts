@@ -16,10 +16,17 @@ export const serviceOfferingsApi = createApi({
       return headers;
     },
   }),
-
+  tagTypes: ["ServiceOffering"],
   endpoints: (builder) => ({
     getServiceOfferings: builder.query<ServiceOffering[], void>({
       query: () => "/service-offerings",
+      providesTags: (result) => [
+        { type: "ServiceOffering" as const, id: "LIST" },
+        // map over an empty array when result is undefined; filter out items without id
+        ...(result ?? [])
+          .filter((s) => s.id)
+          .map((s) => ({ type: "ServiceOffering" as const, id: s.id! })),
+      ],
     }),
     addServiceOffering: builder.mutation<void, ServiceOffering>({
       query: (serviceOffering) => ({
@@ -37,9 +44,13 @@ export const serviceOfferingsApi = createApi({
     }),
     deleteServiceOffering: builder.mutation<void, string>({
       query: (id) => ({
-        url: `/${id}`,
+        url: `service-offerings/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: (result, error, id) => [
+        { type: "ServiceOffering" as const, id },
+        { type: "ServiceOffering" as const, id: "LIST" },
+      ],
     }),
   }),
 });

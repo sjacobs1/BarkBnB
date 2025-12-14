@@ -18,7 +18,6 @@ import ServiceDetailsSheet from "../../components/user/userComponents/serviceDet
 import { ServiceOffering } from "../models/serviceOffering";
 
 const UserHome = () => {
-  // const services = useServicesStore((state) => state.serviceOfferings);
   const { serviceOfferings, setServices } = useServicesStore();
   const {
     data: fetchedServices,
@@ -26,8 +25,6 @@ const UserHome = () => {
     isLoading,
     error,
   } = useGetServiceOfferingsQuery();
-
-  // const setServices = useServicesStore((state) => state.setServices);
 
   useEffect(() => {
     refetch();
@@ -44,18 +41,14 @@ const UserHome = () => {
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => ["25%", "45%", "65%"], []);
 
-  const handleCardPress = (service: {
-    id?: string;
-    name: string;
-    price?: number;
-    image_url?: string | null;
-  }) => {
+  const handleCardPress = (service: ServiceOffering) => {
     console.log("Card Pressed:", service);
     setSelectedService(service);
     bottomSheetModalRef.current?.present();
   };
 
   const handleDismissPress = useCallback(() => {
+    setSelectedService(null);
     bottomSheetModalRef.current?.dismiss();
   }, []);
 
@@ -85,14 +78,14 @@ const UserHome = () => {
           snapPoints={snapPoints}
           enableDynamicSizing={true}
           enablePanDownToClose
-          onDismiss={() => setSelectedService(null)}
+          onDismiss={handleDismissPress}
           backdropComponent={({ style }) => (
             <Pressable
               style={[
                 style,
                 { justifyContent: "center", alignItems: "center" },
               ]}
-              onPress={() => bottomSheetModalRef.current?.dismiss()}
+              onPress={handleDismissPress}
             >
               <View
                 style={[style, { backgroundColor: "rgba(0, 0, 0, 0.5)" }]}

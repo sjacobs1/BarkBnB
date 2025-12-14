@@ -3,5 +3,5 @@ export interface ServiceOffering {
   name: string;
   description: string;
   price: number;
-  serviceImageUrl?: string | null;
+  image_url?: string | null;
 }

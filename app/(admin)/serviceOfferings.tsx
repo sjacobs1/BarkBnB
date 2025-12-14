@@ -16,6 +16,7 @@ import { Link } from "expo-router";
 
 const Services = () => {
   const services = useServicesStore((state) => state.serviceOfferings);
+
   const {
     data: fetchedServices,
     refetch,
@@ -23,6 +24,7 @@ const Services = () => {
     error,
   } = useGetServiceOfferingsQuery();
   console.log("Fetched Services:", fetchedServices);
+
   const setServices = useServicesStore((state) => state.setServices);
 
   useEffect(() => {

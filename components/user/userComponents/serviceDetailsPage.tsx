@@ -23,7 +23,9 @@ const ServiceDetailsSheet = () => {
             />
           )}
           <Image
-            source={{ uri: selectedService.image_url || "assets/logo.svg" }}
+            source={{
+              uri: selectedService.image_url || "assets/logo.svg",
+            }}
             style={style.servicePoster}
             onLoadStart={() => setImageLoading(true)}
             onLoadEnd={() => setImageLoading(false)}
